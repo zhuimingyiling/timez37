@@ -2,21 +2,22 @@ name: unzip
 
 on:
   push:
-    paths:
-      - "AndroidImgui-2.0.zip"
+    branches: [ main ]
+
+permissions:
+  contents: write   # ← 就是这一行解决 403
 
 jobs:
   unzip:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: List files
-        run: ls -la
+        run: ls -l
 
       - name: Unzip
-        run: unzip AndroidImgui-2.0.zip
+        run: unzip -o AndroidImgui-2.0.zip
 
       - name: Remove zip
         run: rm AndroidImgui-2.0.zip
