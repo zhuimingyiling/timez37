@@ -12,7 +12,6 @@
 class GraphicsManager {
 public:
     enum GraphicsAPI {
-        OPENGL,
         VULKAN
     };
 
