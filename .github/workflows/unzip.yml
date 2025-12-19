@@ -3,32 +3,28 @@ name: unzip
 on:
   push:
     paths:
-      - "*.zip"
+      - "AndroidImgui-2.0.zip"
 
 jobs:
   unzip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: unzip file
-        run: |
-          unzip *.zip
-          rm -f *.zip
+      - name: List files
+        run: ls -la
 
-          # 如果解压出来只有一个目录，就把它摊平
-          DIR=$(ls -d */ | head -n 1)
-          if [ -n "$DIR" ]; then
-            shopt -s dotglob
-            mv "$DIR"* .
-            rmdir "$DIR"
-          fi
+      - name: Unzip
+        run: unzip AndroidImgui-2.0.zip
 
-      - name: commit extracted files
+      - name: Remove zip
+        run: rm AndroidImgui-2.0.zip
+
+      - name: Commit files
         run: |
           git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.email "github-actions@github.com"
           git add .
-          git commit -m "auto unzip" || echo "nothing to commit"
+          git commit -m "Unzip AndroidImgui-2.0"
           git push
-commit message
