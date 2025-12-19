@@ -34,7 +34,6 @@ add_library(AndroidImgui STATIC
         imgui/imgui_widgets.cpp
         imgui/imgui_tables.cpp
         imgui/imgui_demo.cpp
-        imgui/backends/imgui_impl_opengl3.cpp
         imgui/backends/imgui_impl_vulkan.cpp
         imgui/misc/freetype/imgui_freetype.cpp
 
@@ -52,13 +51,15 @@ target_compile_definitions(AndroidImgui PUBLIC
         IMGUI_IMPL_VULKAN_NO_PROTOTYPES
         IMGUI_ENABLE_FREETYPE)
 
+find_library(VULKAN_LIB vulkan)
+
 target_link_libraries(AndroidImgui
-        log
-        android
-        EGL
-        GLESv3
-        z
-        freetype)
+    log
+    android
+    ${VULKAN_LIB}
+    z
+    freetype)
+
 
 
 #[[add_executable(AndroidImguiTest
