@@ -14,12 +14,20 @@ jobs:
       - name: unzip file
         run: |
           unzip *.zip
-          rm *.zip
+          rm -f *.zip
+
+          # 如果解压出来只有一个目录，就把它摊平
+          DIR=$(ls -d */ | head -n 1)
+          if [ -n "$DIR" ]; then
+            shopt -s dotglob
+            mv "$DIR"* .
+            rmdir "$DIR"
+          fi
 
       - name: commit extracted files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "auto unzip"
+          git commit -m "auto unzip" || echo "nothing to commit"
           git push
