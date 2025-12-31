@@ -1,37 +1,35 @@
 name: Unzip Uploaded File
-
-# 当有代码推送到 main 分支时触发
+ 
+修复：添加写入权限
+ 
+permissions:
+contents: write
+ 
 on:
-  push:
-    branches: [ main ]
-    # 仅当 zip 文件被修改时才触发
-    paths:
-      - '*.zip'
-
+push:
+branches: [ main ]
+paths:
+- '*.zip'
+ 
 jobs:
-  unzip:
-    runs-on: ubuntu-latest
-    steps:
-      # 第一步：拉取最新代码
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 第二步：执行解压命令
-      - name: Unzip the file
-        run: |
-          # 遍历当前目录下所有 zip 文件并解压
-          for file in *.zip; do
-            if [ -f "$file" ]; then
-              echo "Unzipping $file..."
-              unzip -o "$file" -d "unzipped_$(basename "$file" .zip)"
-            fi
-          done
-
-      # 第三步：提交解压后的文件
-      - name: Commit unzipped files
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "Unzip uploaded files"
-          git push
+unzip:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout code
+uses: actions/checkout@v4
+ 
+- name: Unzip the file
+run: |
+# 遍历并解压所有 zip 文件
+for file in *.zip; do
+if [ -f "$file" ]; then
+echo "Unzipping file..."
+unzip -o "file" -d "unzipped_(basename "file" .zip)"
+fi
+done
+​
+- name: Commit unzipped files
+run: |
+git config --global user.name 'GitHub Actions'
+git config --global user.email 'actions@github.com'
+git add .
