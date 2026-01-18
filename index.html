@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Cloudflare Pages</title>
+    <meta charset="UTF-8">
+    <title>我的第一个全栈网站</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
 </head>
 <body>
-  <h1>Pages 正常工作</h1>
-  <button onclick="callApi()">点我请求 Worker</button>
-  <pre id="out"></pre>
+    <h1>欢迎来到我的边缘计算网站</h1>
+    <p>这是由 Cloudflare Pages 托管的静态页面。</p>
+    
+    <button onclick="getServerTime()">点我请求后端 Workers</button>
+    <p id="response">等待点击...</p>
 
-  <script>
-    async function callApi() {
-      const r = await fetch('/api/hello');
-      document.getElementById('out').innerText = await r.text();
-    }
-  </script>
+    <script>
+        async function getServerTime() {
+            const res = await fetch('/api/hello');
+            const data = await res.json();
+            document.getElementById('response').innerText = "后端说：" + data.message;
+        }
+    </script>
 </body>
 </html>
