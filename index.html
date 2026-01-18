@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cloudflare Pages</title>
+</head>
+<body>
+  <h1>Pages 正常工作</h1>
+  <button onclick="callApi()">点我请求 Worker</button>
+  <pre id="out"></pre>
+
+  <script>
+    async function callApi() {
+      const r = await fetch('/api/hello');
+      document.getElementById('out').innerText = await r.text();
+    }
+  </script>
+</body>
+</html>
