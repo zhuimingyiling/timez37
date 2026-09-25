@@ -1,0 +1,117 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/YoloBoardDetector.kt' -Encoding UTF8\"", "pid": 14828, "ts": 1790300106.0790453}
+{"type": "output", "data": "package com.timez.chess.assist\r\n\r\n", "ts": 1790300106.2660453}
+{"type": "output", "data": "import android.content.Context\r\nimport android.graphics.Bitmap\r\n", "ts": 1790300106.2660453}
+{"type": "output", "data": "import android.graphics.Canvas\r\nimport android.graphics.Color\r\n", "ts": 1790300106.2660453}
+{"type": "output", "data": "import android.graphics.Paint\r\n", "ts": 1790300106.266739}
+{"type": "output", "data": "import android.graphics.RectF\r\nimport android.util.Log\r\nimport org.tensorflow.lite.Interpreter\r\nimport java.nio.ByteBuffer\r\nimport java.nio.ByteOrder\r\nimport java.nio.FloatBuffer\r\nimport kotlin.math.max\r\nimport kotlin.math.min\r\nimport kotlin.math.roundToInt\r\n\r\n/**\r\n * YOLOv5 \u68cb\u5b50\u68c0\u6d4b\u5668\uff08Android \u4fa7\uff0cTFLite\uff09\u3002\r\n *\r\n * \u6a21\u578b\uff1aassets/yolov5n_xq_fp16.tflite\uff08YOLOv5n\uff0c640\u00d7640\uff0cfp16 \u6743\u91cd\uff0c\u8f93\u5165 NHWC float32\uff0c\r\n * \u8f93\u51fa [1,25200,20] float32\uff09\u3002\u8f93\u5165\u4e3a RGB\uff08\u6ce8\u610f\u4e0d\u662f BGR\uff0cBGR \u4f1a\u628a\u7ea2\u9ed1\u9635\u8425\u4e92\u6362\uff09\u3002\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * \u7eaf\u63a8\u7406\u5c01\u88c5\uff1a\u89e3\u7801\u4e0e\u68cb\u76d8\u6620\u5c04\u5728\u7eaf JVM \u7684 YoloPostprocessor / DetectionBoardMapper \u4e2d\uff0c\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * \u4fbf\u4e8e\u5355\u5143\u6d4b\u8bd5\u3002\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " *\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * \u6027\u80fd\u8981\u70b9\uff1a\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * - \u652f\u6301[cropHint]\u88c1\u526a\u63a8\u7406\uff1a\u5df2\u77e5\u68cb\u76d8\u4f4d\u7f6e\u65f6\u53ea\u53d6\u68cb\u76d8\u5916\u6269\u533a\u57df\uff0c\u5355\u6b21 drawBitmap \u5b8c\u6210\u7f29\u653e\uff1b\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * - \u50cf\u7d20 -> float \u5728 JVM \u5185\u4e00\u6b21\u6027\u5199\u5165\u590d\u7528\u6570\u7ec4\uff0c\u518d\u6574\u5757 put \u8fdb\u8f93\u5165\u7f13\u51b2\uff08\u907f\u514d\u767e\u4e07\u6b21 putFloat JNI\uff09\uff1b\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " * - \u89e3\u7801\u76f4\u63a5\u6d88\u8d39\u89e3\u91ca\u5668\u8f93\u51fa\uff08\u65e0 2MB flat \u62f7\u8d1d\uff09\u3002\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": " */\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": "class YoloBoardDetector(context: Context) {\r\n", "ts": 1790300106.2672393}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val interpreter: Interpreter\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val input: ByteBuffer\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val inputFloat: FloatArray\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val inputFloatBuffer: FloatBuffer\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val output: Array<Array<FloatArray>>\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val workPx = IntArray(YoloPostprocessor.MODEL_INPUT * YoloPostprocessor.MODEL_INPUT)\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val dstRect = RectF()\r\n", "ts": 1790300106.2678866}
+{"type": "output", "data": "    private val paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "    private var square: Bitmap? = null\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "    private var cropBitmap: Bitmap? = null\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "    init {\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "        val options = Interpreter.Options().apply { numThreads = 4 }\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "        interpreter = Interpreter(loadModel(context, MODEL_FILE), options)\r\n        input = ByteBuffer.allocateDirect(4 * 3 * YoloPostprocessor.MODEL_INPUT * YoloPostprocessor.MODEL_INPUT)\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "            .order(ByteOrder.nativeOrder())\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "        inputFloatBuffer = input.asFloatBuffer()\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "        inputFloat = FloatArray(3 * YoloPostprocessor.MODEL_INPUT * YoloPostprocessor.MODEL_INPUT)\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "        output = Array(1) { Array(YoloPostprocessor.ANCHORS) { FloatArray(YoloPostprocessor.DIMS) } }\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "    }\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "    /**\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "     * \u68c0\u6d4b\u4e00\u5e27\u5e76\u6620\u5c04\u4e3a 9\u00d710 \u68cb\u76d8\u3002\u65e0\u8db3\u591f\u68cb\u5b50/\u6620\u5c04\u5931\u8d25\u8fd4\u56de null\u3002\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "     *\r\n", "ts": 1790300106.2683895}
+{"type": "output", "data": "     * @param cropHint \u88c1\u526a\u533a\u57df\uff08\u5e27\u50cf\u7d20\u5750\u6807 x0,y0,x1,y1\uff09\uff1bnull \u8868\u793a\u6574\u5e27\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "     */\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "    fun detect(frame: Frame, cropHint: DoubleArray? = null): DetectionBoardMapper.MappedBoard? {\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "        val cx0: Int; val cy0: Int; val cw: Int; val ch: Int\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "        if (cropHint != null && cropHint[2] - cropHint[0] >= 64 && cropHint[3] - cropHint[1] >= 64) {\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "            cx0 = max(0, cropHint[0].toInt()); cy0 = max(0, cropHint[1].toInt())\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "            cw = min(frame.width, cropHint[2].toInt()) - cx0\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "            ch = min(frame.height, cropHint[3].toInt()) - cy0\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "        } else {\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "            cx0 = 0; cy0 = 0; cw = frame.width; ch = frame.height\r\n", "ts": 1790300106.2691894}
+{"type": "output", "data": "        }\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        val lb = renderInput(frame, cx0, cy0, cw, ch)\r\n        val t0 = System.currentTimeMillis()\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        input.rewind()\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        interpreter.run(input, output)\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        val inferMs = System.currentTimeMillis() - t0\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        val dets = YoloPostprocessor.decode(output[0], lb, cw, ch)\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        // \u88c1\u526a\u5750\u6807 -> \u5e27\u5750\u6807\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        val shifted = if (cx0 == 0 && cy0 == 0) dets\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        else dets.map { YoloDetection(it.labelId, it.score, it.cx + cx0, it.cy + cy0, it.w, it.h) }\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        val mapped = DetectionBoardMapper.map(shifted, frame.width, frame.height)\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "        Log.d(TAG, \"yolo: infer=${inferMs}ms crop=${cw}x$ch dets=${dets.size} \" +\r\n", "ts": 1790300106.269695}
+{"type": "output", "data": "            \"pieces=${mapped?.pieceCount ?: 0} avg=${mapped?.avgScore?.let { \"%.2f\".format(it) }} \" +\r\n            \"dropped=${mapped?.dropped ?: 0}\")\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        return mapped\r\n    }\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "    fun close() {\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        interpreter.close()\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        square?.recycle()\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        square = null\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        cropBitmap?.recycle()\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "        cropBitmap = null\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "    }\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2701983}
+{"type": "output", "data": "    /** \u5e27 -> 640\u00d7640 letterbox RGB float \u8f93\u5165\uff0c\u8fd4\u56de letterbox \u53c2\u6570\uff08\u76f8\u5bf9\u88c1\u526a\u533a\u57df\uff09 */\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "    private fun renderInput(frame: Frame, cx0: Int, cy0: Int, cw: Int, chh: Int): YoloPostprocessor.Letterbox {\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        val lb = YoloPostprocessor.Letterbox.forFrame(cw, chh)\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        val nw = (cw * lb.scale).roundToInt().coerceAtLeast(1)\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        val nh = (chh * lb.scale).roundToInt().coerceAtLeast(1)\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        // \u76f4\u63a5\u4ece\u50cf\u7d20\u6570\u7ec4\u53d6\u88c1\u526a\u533a\uff08\u4e00\u6b21\u6570\u7ec4\u62f7\u8d1d\uff0c\u5c3a\u5bf8\u7a33\u5b9a\u65f6\u590d\u7528\u4f4d\u56fe\u4ee5\u51cf\u5c11 GC \u538b\u529b\uff09\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        var crop = cropBitmap\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        if (crop == null || crop.width != cw || crop.height != chh) {\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "            crop?.recycle()\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "            crop = Bitmap.createBitmap(cw, chh, Bitmap.Config.ARGB_8888)\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "            cropBitmap = crop\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        }\r\n", "ts": 1790300106.2706985}
+{"type": "output", "data": "        crop.setPixels(frame.argb, cy0 * frame.width + cx0, frame.width, 0, 0, cw, chh)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        val sq = square ?: Bitmap.createBitmap(\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "            YoloPostprocessor.MODEL_INPUT, YoloPostprocessor.MODEL_INPUT, Bitmap.Config.ARGB_8888)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "            .also { square = it }\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        val canvas = Canvas(sq)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        canvas.drawColor(Color.rgb(114, 114, 114))\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        dstRect.set(lb.padX.toFloat(), lb.padY.toFloat(),\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "            lb.padX.toFloat() + nw, lb.padY.toFloat() + nh)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        canvas.drawBitmap(crop, null, dstRect, paint)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        sq.getPixels(workPx, 0, YoloPostprocessor.MODEL_INPUT, 0, 0,\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "            YoloPostprocessor.MODEL_INPUT, YoloPostprocessor.MODEL_INPUT)\r\n", "ts": 1790300106.271339}
+{"type": "output", "data": "        // ARGB -> RGB float\uff08JVM \u5185\u4e00\u6b21\u5faa\u73af\uff09\uff0c\u518d\u6574\u5757\u5199\u5165\u8f93\u5165\u7f13\u51b2\r\n", "ts": 1790300106.2718892}
+{"type": "output", "data": "        val f = inputFloat\r\n", "ts": 1790300106.2718892}
+{"type": "output", "data": "        var k = 0\r\n        for (p in workPx) {\r\n            f[k++] = ((p shr 16) and 0xFF) / 255f\r\n            f[k++] = ((p shr 8) and 0xFF) / 255f\r\n            f[k++] = (p and 0xFF) / 255f\r\n        }\r\n        input.rewind()\r\n        inputFloatBuffer.rewind()\r\n", "ts": 1790300106.2718892}
+{"type": "output", "data": "        inputFloatBuffer.put(f)\r\n        return lb\r\n    }\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "    private fun loadModel(context: Context, file: String): ByteBuffer {\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "        context.assets.open(file).use { ins ->\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "            val buf = ByteBuffer.allocateDirect(ins.available()).order(ByteOrder.nativeOrder())\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "            val chunk = ByteArray(64 * 1024)\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "            while (true) {\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "                val n = ins.read(chunk)\r\n                if (n < 0) break\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "                buf.put(chunk, 0, n)\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "            }\r\n", "ts": 1790300106.2723987}
+{"type": "output", "data": "            buf.rewind()\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "            return buf\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "        }\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "    }\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "    companion object {\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "        private const val TAG = \"AssistService\"\r\n        const val MODEL_FILE = \"yolov5n_xq_fp16.tflite\"\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "    }\r\n", "ts": 1790300106.2729764}
+{"type": "output", "data": "}\r\n", "ts": 1790300106.2729764}
+{"type": "end", "exit_code": 0, "ts": 1790300106.2904863}

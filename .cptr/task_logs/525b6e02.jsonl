@@ -1,0 +1,76 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/AssistConfig.kt' -Encoding UTF8\"", "pid": 20436, "ts": 1790300291.4623194}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790300291.6480958}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6480958}
+{"type": "output", "data": "import android.content.Context\r\n\r\n", "ts": 1790300291.6480958}
+{"type": "output", "data": "/**\r\n", "ts": 1790300291.6480958}
+{"type": "output", "data": " * \u8fde\u7ebf\u529f\u80fd\u7684\u6301\u4e45\u5316\u914d\u7f6e\uff08SharedPreferences\uff09\u3002\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": " */\r\nclass AssistConfig(context: Context) {\r\n    private val sp = context.getSharedPreferences(\"assist_settings\", Context.MODE_PRIVATE)\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": "    /** \u6700\u8fd1\u4e00\u6b21\u8bc6\u522b\u65f6\u7684\u5e27\u5c3a\u5bf8\uff08\u60ac\u6d6e\u7a97\u906e\u6321\u5224\u65ad\u7528\uff1a\u628a\u5f52\u4e00\u5316\u68cb\u76d8\u6846\u6362\u7b97\u56de\u50cf\u7d20\uff09 */\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": "    var frameSize: Pair<Int, Int>\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": "        get() {\r\n", "ts": 1790300291.6485984}
+{"type": "output", "data": "            val w = sp.getInt(KEY_FRAME_W, 0)\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "            val h = sp.getInt(KEY_FRAME_H, 0)\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "            return w to h\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "        }\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "        set(value) {\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "            sp.edit().putInt(KEY_FRAME_W, value.first).putInt(KEY_FRAME_H, value.second).apply()\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "        }\r\n\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "    /** \u7a33\u5b9a\u786e\u8ba4\u5e27\u6570\uff081..8\uff09 */\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "    var confirmCount: Int\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "        get() = sp.getInt(KEY_CONFIRM, 2).coerceIn(1, 8)\r\n", "ts": 1790300291.6491024}
+{"type": "output", "data": "        set(value) { sp.edit().putInt(KEY_CONFIRM, value.coerceIn(1, 8)).apply() }\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "    /** \u60ac\u6d6e\u7a97\u4e0a\u6b21\u4f4d\u7f6e\uff08\u5de6\u4e0a\u89d2\uff0c\u5f52\u4e00\u5316 0..1\uff09\uff0c\u672a\u8bbe\u7f6e\u5219\u9ed8\u8ba4 */\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "    var overlayPos: Pair<Float, Float>\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "        get() = sp.getFloat(KEY_OVERLAY_X, -1f) to sp.getFloat(KEY_OVERLAY_Y, -1f)\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "        set(value) {\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "            sp.edit().putFloat(KEY_OVERLAY_X, value.first).putFloat(KEY_OVERLAY_Y, value.second).apply()\r\n        }\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "    /** \u641c\u7d22\u6df1\u5ea6\uff08\u4e0e\u5bf9\u5f08\"\u56fa\u5b9a\u6df1\u5ea6\"\u5236\u5f0f\u4e00\u81f4\uff0c\u9ed8\u8ba4 20\uff09 */\r\n", "ts": 1790300291.6496036}
+{"type": "output", "data": "    var searchDepth: Int\r\n", "ts": 1790300291.6501067}
+{"type": "output", "data": "        get() = sp.getInt(KEY_SEARCH_DEPTH, 20)\r\n", "ts": 1790300291.6501067}
+{"type": "output", "data": "        set(value) { sp.edit().putInt(KEY_SEARCH_DEPTH, value.coerceIn(6, 40)).apply() }\r\n", "ts": 1790300291.6501067}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6501067}
+{"type": "output", "data": "    // ==================== \u5f15\u64ce\u6a21\u5f0f\uff08\u672c\u5730 / \u8fdc\u7a0b\uff09 ====================\r\n", "ts": 1790300291.6501067}
+{"type": "output", "data": "\r\n    /** \u5f15\u64ce\u6a21\u5f0f\uff1a\"local\" / \"remote\"\uff0c\u9ed8\u8ba4 \"local\" */\r\n    var engineMode: String\r\n        get() = sp.getString(KEY_ENGINE_MODE, \"local\") ?: \"local\"\r\n        set(value) {\r\n            val v = if (value == \"remote\") \"remote\" else \"local\"\r\n            sp.edit().putString(KEY_ENGINE_MODE, v).apply()\r\n        }\r\n\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    /** \u8fdc\u7a0b\u5f15\u64ce\u4e3b\u673a\uff08\u7535\u8111\u5c40\u57df\u7f51 IP\uff09\uff0c\u9ed8\u8ba4\u7a7a\uff0c\u7531\u7528\u6237\u5728\u5e94\u7528\u5185\u8f93\u5165 */\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    var remoteHost: String\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "        get() = sp.getString(KEY_REMOTE_HOST, \"\") ?: \"\"\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "        set(value) { sp.edit().putString(KEY_REMOTE_HOST, value.trim()).apply() }\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    /** \u8fdc\u7a0b\u5f15\u64ce\u7aef\u53e3\uff0c\u9ed8\u8ba4 0\uff08\u672a\u8bbe\u7f6e\uff09\uff0c\u7531\u7528\u6237\u5728\u5e94\u7528\u5185\u8f93\u5165 */\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    var remotePort: Int\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "        get() = sp.getInt(KEY_REMOTE_PORT, 0)\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "        set(value) { sp.edit().putInt(KEY_REMOTE_PORT, value.coerceIn(0, 65535)).apply() }\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    /** \u8fdc\u7a0b\u914d\u7f6e\u662f\u5426\u6709\u6548\uff08IP \u975e\u7a7a\u4e14\u7aef\u53e3\u5728\u5408\u6cd5\u8303\u56f4\uff09 */\r\n", "ts": 1790300291.6506095}
+{"type": "output", "data": "    val isRemoteValid: Boolean\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "        get() = remoteHost.isNotBlank() && remotePort in 1..65535\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "    // ==================== \u5176\u4ed6 ====================\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "    // /** \u5f15\u64ce Hash\uff08MB\uff0c\u4e0e\u5bf9\u5f08\u8bbe\u7f6e\u540c\u53e3\u5f84\uff1b\u9762\u677f\u6309\u94ae\u5faa\u73af 256\u2192512\u21921024\u21922048\uff09 */\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "    var hashMb: Int\r\n        get() = sp.getInt(KEY_HASH_MB, 256)\r\n        set(value) { sp.edit().putInt(KEY_HASH_MB, value).apply() }\r\n    /** \u68cb\u76d8\u76ae\u80a4\uff1a\"auto\"\uff08\u81ea\u52a8\u68c0\u6d4b\uff09/\"wood\"/\"green\"/\"white\" */\r\n", "ts": 1790300291.6511116}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "    /** \u5f15\u64ce\u7ebf\u7a0b\u6570\uff08\u672c\u5730/\u8fdc\u7a0b\u5171\u7528\uff09\uff0c\u9ed8\u8ba4\u53d6\u624b\u673a\u6838\u5fc3\u6570 */\r\n    var threads: Int\r\n        get() = sp.getInt(KEY_THREADS, Runtime.getRuntime().availableProcessors())\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "            .coerceIn(1, 128)\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "        set(value) { sp.edit().putInt(KEY_THREADS, value.coerceIn(1, 128)).apply() }\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "    var boardSkin: String\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "        get() = sp.getString(KEY_BOARD_SKIN, \"auto\") ?: \"auto\"\r\n", "ts": 1790300291.6516144}
+{"type": "output", "data": "        set(value) { sp.edit().putString(KEY_BOARD_SKIN, value).apply() }\r\n\r\n", "ts": 1790300291.6521175}
+{"type": "output", "data": "    companion object {\r\n", "ts": 1790300291.6521175}
+{"type": "output", "data": "        private const val KEY_FRAME_W = \"frame_w\"\r\n        private const val KEY_FRAME_H = \"frame_h\"\r\n", "ts": 1790300291.6521175}
+{"type": "output", "data": "        private const val KEY_CONFIRM = \"confirm_count\"\r\n", "ts": 1790300291.6521175}
+{"type": "output", "data": "        private const val KEY_OVERLAY_X = \"overlay_x\"\r\n", "ts": 1790300291.6521175}
+{"type": "output", "data": "        private const val KEY_OVERLAY_Y = \"overlay_y\"\r\n        private const val KEY_SEARCH_DEPTH = \"search_depth\"\r\n        private const val KEY_HASH_MB = \"hash_mb\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "        private const val KEY_ENGINE_MODE = \"engine_mode\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "        private const val KEY_REMOTE_HOST = \"remote_host\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "        private const val KEY_REMOTE_PORT = \"remote_port\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "        private const val KEY_BOARD_SKIN = \"board_skin\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "        private const val KEY_THREADS = \"engine_threads\"\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "    }\r\n", "ts": 1790300291.6526198}
+{"type": "output", "data": "}\r\n", "ts": 1790300291.6526198}
+{"type": "end", "exit_code": 0, "ts": 1790300291.6702397}

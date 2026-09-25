@@ -1,0 +1,152 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/PieceMatcher.kt' -Encoding UTF8\"", "pid": 21216, "ts": 1790299863.8066745}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790299863.999629}
+{"type": "output", "data": "\r\n", "ts": 1790299863.999629}
+{"type": "output", "data": "import android.content.Context\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\nimport android.util.Log\r\n", "ts": 1790299863.999629}
+{"type": "output", "data": "import com.timez.chess.gamelogic.Piece\r\nimport kotlin.collections.iterator\r\n", "ts": 1790299863.999629}
+{"type": "output", "data": "import kotlin.math.sqrt\r\n\r\n/**\r\n * \u6a21\u677f\u5339\u914d\u68cb\u5b50\u8bc6\u522b\u5668\u3002\r\n * YOLO \u53ea\u8d1f\u8d23\u7ed9\u51fa\u68cb\u76d8\u7ebf\u6846\u4f4d\u7f6e\uff0c\u672c\u7c7b\u8d1f\u8d23\u5728\u6846\u5185 9\u00d710 \u4e2a\u4ea4\u53c9\u70b9\u4e0a\uff0c\r\n * \u7528\u5f52\u4e00\u5316\u4e92\u76f8\u5173\uff08NCC\uff09\u6bd4\u5bf9 14 \u4e2a\u68cb\u5b50\u6a21\u677f\uff0c\u8f93\u51fa canonical \u68cb\u76d8\u3002\r\n */\r\nclass PieceMatcher(private val context: Context) {\r\n\r\n    companion object {\r\n        private const val TAG = \"PieceMatcher\"\r\n        private const val TSIZE = 48\r\n        private const val MATCH_THRESHOLD = 0.50f\r\n\r\n        private val CLASSES = arrayOf(\r\n            \"r_che\", \"r_ma\", \"r_xiang\", \"r_shi\", \"r_shuai\", \"r_pao\", \"r_bing\",\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "            \"b_che\", \"b_ma\", \"b_xiang\", \"b_shi\", \"b_jiang\", \"b_pao\", \"b_zu\"\r\n        )\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "        private val SKINS = arrayOf(\"wood\", \"green\", \"white\")\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "        private val CLASS_TO_PIECE: Map<String, Int> = mapOf(\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "            \"r_che\" to Piece.WJU, \"r_ma\" to Piece.WMA, \"r_xiang\" to Piece.WXIANG,\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "            \"r_shi\" to Piece.WSHI, \"r_shuai\" to Piece.WSHUAI, \"r_pao\" to Piece.WPAO,\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "            \"r_bing\" to Piece.WBING,\r\n", "ts": 1790299864.0001311}
+{"type": "output", "data": "            \"b_che\" to Piece.BJU, \"b_ma\" to Piece.BMA, \"b_xiang\" to Piece.BXIANG,\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "            \"b_shi\" to Piece.BSHI, \"b_jiang\" to Piece.BJIANG, \"b_pao\" to Piece.BPAO,\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "            \"b_zu\" to Piece.BZU,\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "        )\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "    }\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "    private val templates: Map<String, Map<String, FloatArray>>\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "    init {\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "        val loaded = mutableMapOf<String, Map<String, FloatArray>>()\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "        for (skin in SKINS) {\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "            val skinMap = mutableMapOf<String, FloatArray>()\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "            for (cls in CLASSES) {\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "                try {\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "                    context.assets.open(\"templates/$skin/$cls.png\").use { ins ->\r\n", "ts": 1790299864.0010574}
+{"type": "output", "data": "                        val bmp = BitmapFactory.decodeStream(ins)\r\n", "ts": 1790299864.001559}
+{"type": "output", "data": "                        if (bmp != null) {\r\n", "ts": 1790299864.001559}
+{"type": "output", "data": "                            skinMap[cls] = extractGrayFromBitmap(bmp)\r\n                            bmp.recycle()\r\n                        }\r\n                    }\r\n                } catch (e: Exception) {\r\n                    Log.w(TAG, \"load failed: $skin/$cls: ${e.message}\")\r\n                }\r\n            }\r\n            if (skinMap.size >= 12) {\r\n                loaded[skin] = skinMap\r\n                Log.i(TAG, \"loaded skin $skin: ${skinMap.size} classes\")\r\n            }\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        }\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        templates = loaded\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        Log.i(TAG, \"available skins: ${templates.keys}\")\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "    }\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "    data class MatchResult(\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        val canonical: Array<IntArray>,\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        val skin: String,\r\n        val score: Float,\r\n", "ts": 1790299864.0021935}
+{"type": "output", "data": "        val pieceCount: Int,\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "    )\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "    /**\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "     * @param nx0,ny0,nx1,ny1 \u68cb\u76d8\u7ebf\u6846\u5f52\u4e00\u5316\u5750\u6807\uff08\u5de6\u4e0a\u3001\u53f3\u4e0b\uff09\r\n     * @param preferredSkin \u6307\u5b9a\u76ae\u80a4\uff08\"wood\"/\"green\"/\"white\"\uff09\uff1bnull \u6216 \"auto\" \u65f6\u8dd1\u5168\u90e8\u76ae\u80a4\u53d6\u6700\u4f18\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "     */\r\n    fun match(\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        frame: Frame,\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        nx0: Float, ny0: Float, nx1: Float, ny1: Float,\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        preferredSkin: String? = null,\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "    ): MatchResult? {\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        if (templates.isEmpty()) return null\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        val x0 = (nx0 * frame.width).toInt()\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        val y0 = (ny0 * frame.height).toInt()\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        val x1 = (nx1 * frame.width).toInt()\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        val y1 = (ny1 * frame.height).toInt()\r\n", "ts": 1790299864.0027227}
+{"type": "output", "data": "        if (x1 - x0 < 100 || y1 - y0 < 100) return null\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        val colGap = (x1 - x0) / 8f\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        val rowGap = (y1 - y0) / 9f\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        val half = (minOf(colGap, rowGap) * 0.40f).toInt()\r\n\r\n        val skinList: List<String> = if (!preferredSkin.isNullOrEmpty() && preferredSkin != \"auto\"\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "            && templates.containsKey(preferredSkin)) {\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "            listOf(preferredSkin)\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        } else {\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "            templates.keys.toList()\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        }\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        var best: MatchResult? = null\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "        for (skin in skinList) {\r\n", "ts": 1790299864.0033603}
+{"type": "output", "data": "            val tplMap = templates[skin] ?: continue\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "            val board = Array(10) { IntArray(9) }\r\n            var scoreSum = 0f\r\n            var count = 0\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "            for (row in 0 until 10) {\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                for (col in 0 until 9) {\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    val cx = (x0 + col * colGap).toInt()\r\n                    val cy = (y0 + row * rowGap).toInt()\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    val sx = (cx - half).coerceAtLeast(0)\r\n                    val sy = (cy - half).coerceAtLeast(0)\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    val ex = (cx + half).coerceAtMost(frame.width)\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    val ey = (cy + half).coerceAtMost(frame.height)\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    if (ex - sx < 8 || ey - sy < 8) continue\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0039163}
+{"type": "output", "data": "                    val gray = extractGrayFromFrame(frame, sx, sy, ex, ey)\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    var bestCls: String? = null\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    var bestScore = -1f\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    for ((cls, tpl) in tplMap) {\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                        val s = ncc(gray, tpl)\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                        if (s > bestScore) { bestScore = s; bestCls = cls }\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    }\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    if (bestCls != null && bestScore > MATCH_THRESHOLD) {\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                        board[row][col] = CLASS_TO_PIECE[bestCls] ?: Piece.EMPTY\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                        scoreSum += bestScore\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                        count++\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                    }\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "                }\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "            }\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "            val avg = if (count > 0) scoreSum / count else 0f\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "            val r = MatchResult(board, skin, avg, count)\r\n", "ts": 1790299864.004417}
+{"type": "output", "data": "            if (best == null || r.pieceCount > best!!.pieceCount) best = r\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        }\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        return best\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "    }\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "    /** \u4ece\u5e27\u50cf\u7d20\u4e2d\u88c1\u53d6 x0..x1 / y0..y1 \u533a\u57df\uff0c\u7f29\u653e\u4e3a TSIZE\u00d7TSIZE \u7070\u5ea6\u5f52\u4e00\u5316\u6570\u7ec4 */\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "    private fun extractGrayFromFrame(frame: Frame, x0: Int, y0: Int, x1: Int, y1: Int): FloatArray {\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        val w = x1 - x0\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        val h = y1 - y0\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        val out = FloatArray(TSIZE * TSIZE)\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        val stepX = w.toFloat() / TSIZE\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        val stepY = h.toFloat() / TSIZE\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "        for (ty in 0 until TSIZE) {\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "            val sy = (y0 + ty * stepY).toInt().coerceIn(0, frame.height - 1)\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "            for (tx in 0 until TSIZE) {\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                val sx = (x0 + tx * stepX).toInt().coerceIn(0, frame.width - 1)\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                val p = frame.argb[sy * frame.width + sx]\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                val r = (p shr 16) and 0xFF\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                val g = (p shr 8) and 0xFF\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                val b = p and 0xFF\r\n", "ts": 1790299864.0049198}
+{"type": "output", "data": "                out[ty * TSIZE + tx] = (0.299f * r + 0.587f * g + 0.114f * b) / 255f\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            }\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        }\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        normalize(out)\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        return out\r\n    }\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "\r\n    private fun extractGrayFromBitmap(bmp: Bitmap): FloatArray {\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        val scaled = if (bmp.width != TSIZE || bmp.height != TSIZE) {\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            Bitmap.createScaledBitmap(bmp, TSIZE, TSIZE, true)\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        } else bmp\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        val px = IntArray(TSIZE * TSIZE)\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        scaled.getPixels(px, 0, TSIZE, 0, 0, TSIZE, TSIZE)\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        val out = FloatArray(TSIZE * TSIZE)\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        for (i in px.indices) {\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            val p = px[i]\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            val r = (p shr 16) and 0xFF\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            val g = (p shr 8) and 0xFF\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            val b = p and 0xFF\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "            out[i] = (0.299f * r + 0.587f * g + 0.114f * b) / 255f\r\n", "ts": 1790299864.0058343}
+{"type": "output", "data": "        }\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        if (scaled !== bmp) scaled.recycle()\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        normalize(out)\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        return out\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "    }\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "\r\n    private fun normalize(arr: FloatArray) {\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        var sum = 0f\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        for (v in arr) sum += v\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        val mean = sum / arr.size\r\n        var sq = 0f\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        for (v in arr) sq += (v - mean) * (v - mean)\r\n", "ts": 1790299864.006602}
+{"type": "output", "data": "        val std = sqrt(sq / arr.size).coerceAtLeast(1e-6f)\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "        for (i in arr.indices) arr[i] = (arr[i] - mean) / std\r\n    }\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "    private fun ncc(a: FloatArray, b: FloatArray): Float {\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "        var dot = 0f\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "        for (i in a.indices) dot += a[i] * b[i]\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "        return dot / a.size\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "    }\r\n", "ts": 1790299864.0071054}
+{"type": "output", "data": "}\r\n", "ts": 1790299864.0071054}
+{"type": "end", "exit_code": 0, "ts": 1790299864.0261073}

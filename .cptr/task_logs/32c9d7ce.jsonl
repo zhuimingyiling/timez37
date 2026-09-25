@@ -1,0 +1,181 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/AssistBoard.kt' -Encoding UTF8\"", "pid": 25904, "ts": 1790299945.000389}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790299945.3187273}
+{"type": "output", "data": "\r\nimport com.timez.chess.gamelogic.Piece\r\n", "ts": 1790299945.3187273}
+{"type": "output", "data": "import kotlin.text.iterator\r\n\r\n/**", "ts": 1790299945.3192298}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": " * \u7eaf JVM \u7684\u4e2d\u56fd\u8c61\u68cb\u68cb\u76d8\u62bd\u8c61\u3002\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": " * \u7ea6\u5b9a\u4e0e\u9879\u76ee gamelogic.Board \u4e00\u81f4\uff1apiece[y][x]\uff0cy=0 \u4e3a\u9ed1\u65b9\u5e95\u7ebf\uff0cy=9 \u4e3a\u7ea2\u65b9\u5e95\u7ebf\uff08\u7ea2\u5728\u4e0b\u5373\u6807\u51c6\u89c6\u89d2\uff09\u3002\r\n * \u672c\u6587\u4ef6\u4e0d\u4f9d\u8d56\u4efb\u4f55 Android \u7c7b\uff0c\u4fbf\u4e8e\u5355\u5143\u6d4b\u8bd5\u3002\r\n */\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": "object AssistBoard {\r\n    const val W = 9\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": "    const val H = 10\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3192298}
+{"type": "output", "data": "    /** \u6807\u51c6\u5f00\u5c40 FEN\uff08xqbase \u683c\u5f0f\uff0c\u7ea2\u5148\uff09 */\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "    const val START_FEN = \"rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1\"\r\n\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "    /** \u6807\u51c6\u5f00\u5c40\u5c40\u9762\uff0cpiece[y][x]\uff0c\u7ea2\u5728 y=9 \u5e95\u90e8 */\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "    /**\r\n     * \u6bd4\u5bf9\u4e24\u4e2a\u5c40\u9762\u7684\"\u8d70\u5b50\u7279\u5f81\"\uff1a\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "     * - occupiedToEmpty\uff1a\u4ece\u6709\u5b50\u53d8\u7a7a\u7684\u683c\u5b50\u6570\uff08\u771f\u5b9e\u8d70\u5b50\u5fc5\u4e3a 1\uff0c\u5373\u8d77\u70b9\uff09\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "     * - emptyToOccupied\uff1a\u4ece\u7a7a\u53d8\u6709\u5b50\u7684\u683c\u5b50\u6570\uff08\u65e0\u5403\u5b50\u65f6\u4e3a 1\uff0c\u5403\u5b50\u65f6\u4e3a 0\uff09\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "     * - typeChange\uff1a\u540c\u683c\u6709\u5b50\u4f46\u7c7b\u578b\u53d8\u4e86\uff08\u5403\u5b50\u65f6\u7ec8\u70b9 1 \u683c\uff0c\u6216\u8bc6\u522b\u6296\u52a8\uff09\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "     * \u8fd4\u56de intArrayOf(occupiedToEmpty, emptyToOccupied, typeChange)\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "     */\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "    fun moveDiff(a: Array<IntArray>, b: Array<IntArray>): IntArray {\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "        var occToEmpty = 0\r\n", "ts": 1790299945.3197343}
+{"type": "output", "data": "        var emptyToOcc = 0\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "        var typeChange = 0\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) {\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "            val pa = a[y][x]\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "            val pb = b[y][x]\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "            if (pa == pb) continue\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "            when {\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "                pa != Piece.EMPTY && pb == Piece.EMPTY -> occToEmpty++\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "                pa == Piece.EMPTY && pb != Piece.EMPTY -> emptyToOcc++\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "                else -> typeChange++\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "            }\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3203857}
+{"type": "output", "data": "        return intArrayOf(occToEmpty, emptyToOcc, typeChange)\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "    fun canonicalStart(): Array<IntArray> {\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        val p = Array(H) { IntArray(W) }\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        for (x in 0 until W) {\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "            p[0][x] = when (x) {\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "                0, 8 -> Piece.BJU\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "                1, 7 -> Piece.BMA\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "                2, 6 -> Piece.BXIANG\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "                3, 5 -> Piece.BSHI\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "                else -> Piece.BJIANG\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "            }\r\n        }\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        p[2][1] = Piece.BPAO\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        p[2][7] = Piece.BPAO\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        for (x in 0 until W step 2) p[3][x] = Piece.BZU\r\n", "ts": 1790299945.3209999}
+{"type": "output", "data": "        for (x in 0 until W step 2) p[6][x] = Piece.WBING\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "        p[7][1] = Piece.WPAO\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "        p[7][7] = Piece.WPAO\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "        for (x in 0 until W) {\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "            p[9][x] = when (x) {\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "                0, 8 -> Piece.WJU\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "                1, 7 -> Piece.WMA\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "                2, 6 -> Piece.WXIANG\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "                3, 5 -> Piece.WSHI\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "                else -> Piece.WSHUAI\r\n", "ts": 1790299945.3216975}
+{"type": "output", "data": "            }\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "        return p\r\n    }", "ts": 1790299945.3222454}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "    fun clone(p: Array<IntArray>): Array<IntArray> = Array(H) { p[it].clone() }\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "    fun equal(a: Array<IntArray>, b: Array<IntArray>): Boolean {\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) if (a[y][x] != b[y][x]) return false\r\n        return true\r\n    }\r\n\r\n    /** piece[y][x] -> xqbase FEN \u76d8\u9762 + \u8d70\u5b50\u65b9 */\r\n    fun toFen(pieces: Array<IntArray>, redGo: Boolean): String {\r\n        val sb = StringBuilder()\r\n", "ts": 1790299945.3222454}
+{"type": "output", "data": "        for (y in 0 until H) {\r\n            var zeros = 0\r\n            for (x in 0 until W) {\r\n                val p = pieces[y][x]\r\n                if (p == Piece.EMPTY) zeros++\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "                else {\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "                    if (zeros > 0) { sb.append(zeros); zeros = 0 }\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "                    sb.append(Piece.pieceCharMap[p])\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "                }\r\n            }\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "            if (zeros > 0) sb.append(zeros)\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "            if (y < H - 1) sb.append('/')\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "        return \"$sb ${if (redGo) \"w\" else \"b\"} - - 0 1\"\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3229806}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "    fun piecesFromFen(fen: String): Array<IntArray> {\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "        val p = Array(H) { IntArray(W) }\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "        val board = fen.trim().split(' ')[0]\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "        var x = 0\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "        var y = 0\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "        for (c in board) {\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "            when {\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "                c == '/' -> { x = 0; y++ }\r\n", "ts": 1790299945.3235552}
+{"type": "output", "data": "                c in '0'..'9' -> { x += c - '0' }\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "                else -> { p[y][x] = Piece.pieceValueMap[c] ?: Piece.EMPTY; x++ }\r\n            }\r\n        }\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "        return p\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "    /**\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "     * \u5e94\u7528\u4e00\u4e2a ucci \u7740\u6cd5\uff08\u5982 \"h2e2\"\uff09\u5230 FEN \u5c40\u9762\uff0c\u8fd4\u56de\u884c\u68cb\u65b9\u7ffb\u8f6c\u540e\u7684\u65b0 FEN\u3002\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "     * \u7740\u6cd5\u975e\u6cd5\u6216\u8d77\u70b9\u65e0\u5b50\u65f6\u539f\u6837\u8fd4\u56de\u3002\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "     */    fun applyUcci(fen: String, ucci: String): String {\r\n", "ts": 1790299945.3240578}
+{"type": "output", "data": "        if (ucci.length < 4) return fen\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val fx = ucci[0] - 'a'\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val fy = 9 - (ucci[1] - '0')\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val tx = ucci[2] - 'a'\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val ty = 9 - (ucci[3] - '0')\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        if (fx !in 0 until W || fy !in 0 until H || tx !in 0 until W || ty !in 0 until H) return fen\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val board = piecesFromFen(fen)\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val piece = board[fy][fx]\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        if (piece == Piece.EMPTY) return fen\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        board[ty][tx] = piece\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        board[fy][fx] = Piece.EMPTY\r\n", "ts": 1790299945.324855}
+{"type": "output", "data": "        val nextRedGo = fen.trim().split(' ').getOrNull(1) != \"w\"\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "        return toFen(board, nextRedGo)\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "    /**\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "     * \u63a8\u65ad\"\u521a\u8d70\u5b50\u7684\u4e00\u65b9\"\uff1a\u5bf9\u6bd4\u65e7/\u65b0\u5c40\u9762\u3002\u8fd4\u56de\u7ea2(1)\u3001\u9ed1(0)\u6216 null(\u65e0\u6cd5\u786e\u5b9a)\u3002\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "     * \u89c4\u5219\uff1a\u65b0\u589e\u68cb\u5b50\uff08\u76ee\u6807\u683c\uff09\u6240\u5c5e\u9635\u8425\u5373\u79fb\u52a8\u65b9\uff1b\u65e0\u65b0\u589e\uff08\u91cd\u6392/\u5f02\u5e38\uff09\u5219\u5c1d\u8bd5\u7528\u79fb\u9664\u65b9\u8865\u3002\r\n     */\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "    fun movedSide(old: Array<IntArray>, new: Array<IntArray>): Int? {\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "        var addedSide: Int? = null\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "        var removedSide: Int? = null\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) {\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "            val o = old[y][x]\r\n", "ts": 1790299945.3254013}
+{"type": "output", "data": "            val n = new[y][x]\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "            if (o == n) continue\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "            if (n != Piece.EMPTY) {\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "                val s = if (Piece.isRed(n)) 1 else 0\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "                if (addedSide != null && addedSide != s) return null\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "                addedSide = s\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "            }\r\n", "ts": 1790299945.3259494}
+{"type": "output", "data": "            if (o != Piece.EMPTY) {\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "                val s = if (Piece.isRed(o)) 1 else 0\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "                if (removedSide != null && removedSide != s) return null\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "                removedSide = s\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "            }\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        return addedSide ?: removedSide\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "    /**\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "     * \u5bbd\u5bb9\u5408\u6cd5\u6027\u6821\u9a8c\uff1a\u53ea\u62e6\"\u4e25\u91cd\u5f02\u5e38\"\u5e27\uff08\u7f3a\u5e05/\u5c06\u3001\u603b\u5b50\u6570\u8d85\u9650\u3001\u540c\u65b9\u5e05>2\uff09\u3002\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "     * \u68cb\u5b50\u6570\u91cf\u4e0a\u9650\u4e0d\u518d\u4e25\u683c\u9650\u5236\u2014\u2014YOLO \u4e2d\u5c40\u96be\u514d\u628a\u8f66/\u9a6c\u6df7\u6dc6\uff0c\u4e25\u683c\u6821\u9a8c\u4f1a\u8ba9\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "     * 90% \u7684\u6b63\u5e38\u5e27\u88ab\u62d2\uff0c\u5bfc\u81f4\"\u8bc6\u522b\u4e0d\u7a33\u5b9a\"\u3002\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "     */\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "    fun validate(pieces: Array<IntArray>): List<String> {\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        val issues = mutableListOf<String>()\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        val counts = IntArray(Piece.BZU + 1)\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) {\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "            val p = pieces[y][x]\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "            if (p != Piece.EMPTY) counts[p]++\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        // \u53ea\u62e6\u771f\u6b63\u79bb\u8c31\u7684\uff1a\u5e05/\u5c06\u5fc5\u987b\u5b58\u5728\uff0c\u4e14\u4e0d\u80fd\u6709 3 \u4e2a\u4ee5\u4e0a\r\n        val redKing = counts[Piece.WSHUAI]\r\n        val blackKing = counts[Piece.BJIANG]\r\n        if (redKing < 1) issues.add(\"\u7ea2\u5e05\u7f3a\u5931\")\r\n", "ts": 1790299945.3264773}
+{"type": "output", "data": "        if (blackKing < 1) issues.add(\"\u9ed1\u5c06\u7f3a\u5931\")\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        if (redKing > 2) issues.add(\"\u7ea2\u5e05\u8fc7\u591a:$redKing\")\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        if (blackKing > 2) issues.add(\"\u9ed1\u5c06\u8fc7\u591a:$blackKing\")\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        var total = 0\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        for (c in counts) total += c\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        if (total > 32) issues.add(\"\u603b\u5b50\u6570\u8d85\u9650:$total\")\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        // \u7ea2/\u9ed1\u4efb\u4e00\u65b9\u68cb\u5b50\u603b\u6570\u8d85\u8fc7 16\uff08\u521d\u59cb\u4e0a\u9650\uff09\uff0c\u8bf4\u660e\u8bc6\u522b\u628a\u5bf9\u65b9\u68cb\u5b50\u7b97\u5230\u4e86\u672c\u65b9\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        var redTotal = 0\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        var blackTotal = 0\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) {\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "            val p = pieces[y][x]\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "            if (p == Piece.EMPTY) continue\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "            if (Piece.isRed(p)) redTotal++ else blackTotal++\r\n", "ts": 1790299945.3274722}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "        if (redTotal > 16) issues.add(\"\u7ea2\u65b9\u5b50\u6570\u8d85\u9650:$redTotal\")\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "        if (blackTotal > 16) issues.add(\"\u9ed1\u65b9\u5b50\u6570\u8d85\u9650:$blackTotal\")\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "        return issues\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "    }\r\n\r\n    /** \u4e0e\u5f00\u5c40\u5bf9\u7167\u4e00\u81f4\u7684\u5b50\u6570\uff08\u7528\u4e8e\"\u5f00\u5c40\u68c0\u6d4b\"\uff09\uff1b\u5f00\u5c40\u5c40\u9762\u53ea\u8bfb\u7f13\u5b58\uff0c\u907f\u514d\u6bcf\u5e27\u91cd\u5efa */", "ts": 1790299945.3281398}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3281398}
+{"type": "output", "data": "    private val startBoard = canonicalStart()\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "    fun matchStartCount(pieces: Array<IntArray>): Int {\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "        var n = 0\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "        for (y in 0 until H) for (x in 0 until W) {\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "            if (pieces[y][x] != Piece.EMPTY && pieces[y][x] == startBoard[y][x]) n++\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "        }\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "        return n\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "    }\r\n", "ts": 1790299945.3286428}
+{"type": "output", "data": "}\r\n", "ts": 1790299945.3286428}
+{"type": "end", "exit_code": 0, "ts": 1790299945.3510048}

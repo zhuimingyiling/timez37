@@ -1,0 +1,12 @@
+{"type": "start", "command": "powershell -Command \"Get-ChildItem README.md, docs/engineer-handoff.md, docs/assist-helper.md, docs/\u6280\u672f\u62a5\u544a.md, XQFParser/readme.MD | ForEach-Object { $b = [System.IO.File]::ReadAllBytes($_.FullName)[0..3]; Write-Host $_.Name ':' ($b -join ',') }\"", "pid": 448, "ts": 1790256959.5012972}
+{"type": "output", "data": "README.md : 35,32,116,105", "ts": 1790256959.9696121}
+{"type": "output", "data": "\n", "ts": 1790256959.9696121}
+{"type": "output", "data": "engineer-handoff.md : 35,32,116,105", "ts": 1790256959.9701142}
+{"type": "output", "data": "\n", "ts": 1790256959.9701142}
+{"type": "output", "data": "assist-helper.md : 35,32,232,191", "ts": 1790256959.9711144}
+{"type": "output", "data": "\n", "ts": 1790256959.9711144}
+{"type": "output", "data": "\u6280\u672f\u62a5\u544a.md : 35,32,116,105", "ts": 1790256959.9728882}
+{"type": "output", "data": "\n", "ts": 1790256959.9728882}
+{"type": "output", "data": "readme.MD : 228,187,163,231", "ts": 1790256959.982791}
+{"type": "output", "data": "\n", "ts": 1790256959.982791}
+{"type": "end", "exit_code": 0, "ts": 1790256960.011179}

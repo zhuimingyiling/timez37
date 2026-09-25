@@ -1,0 +1,222 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/ScreenAssistService.kt' -Encoding UTF8 | Select-Object -Skip 120 -First 260\"", "pid": 4104, "ts": 1790300051.2532268}
+{"type": "output", "data": "    private var currentOrientation = Orientation.STANDARD\r\n", "ts": 1790300051.537917}
+{"type": "output", "data": "    private var lastAnalysis: AnalysisResult? = null\r\n", "ts": 1790300051.537917}
+{"type": "output", "data": "    private var selectedCandidate = 0\r\n\r\n", "ts": 1790300051.537917}
+{"type": "output", "data": "    private var bookMoves: List<BookData>? = null\r\n", "ts": 1790300051.537917}
+{"type": "output", "data": "    private var openBook: BHOpenBook? = null\r\n    private var openBookFailed = false\r\n\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private class HistoryEntry(val result: RecognitionResult, val redGo: Boolean, val fen: String)\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private val history = ArrayDeque<HistoryEntry>()\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private val strengthLevels = listOf(\"\u5feb\u901f\u00b7\u6df1\u5ea612\" to 12, \"\u6807\u51c6\u00b7\u6df1\u5ea620\" to 20, \"\u5f3a\u52b2\u00b7\u6df1\u5ea624\" to 24)\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private var strengthIndex = 0\r\n    private val hashLevels = listOf(256, 512, 1024, 2048)\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private var hashIndex = 0\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "\r\n    private var windowManager: WindowManager? = null\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private var overlayPanel: OverlayPanelView? = null\r\n", "ts": 1790300051.5384169}
+{"type": "output", "data": "    private var overlayParams: WindowManager.LayoutParams? = null\r\n", "ts": 1790300051.5390282}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5390282}
+{"type": "output", "data": "    private val binder = CastBinder()\r\n\r\n", "ts": 1790300051.5466135}
+{"type": "output", "data": "    override fun onCreate() {\r\n        super.onCreate()\r\n", "ts": 1790300051.5466135}
+{"type": "output", "data": "        tracker = BoardTracker(config.confirmCount)\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        val idx = strengthLevels.indexOfFirst { it.second == config.searchDepth }\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        strengthIndex = if (idx >= 0) idx else 1\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        val hidx = hashLevels.indexOfFirst { it == config.hashMb }\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        hashIndex = if (hidx >= 0) hidx else 0\r\n        yoloDetector = try {\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "            YoloBoardDetector(this)\r\n        } catch (t: Throwable) {\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "            Log.w(TAG, \"yolo detector init failed\", t)\r\n            null\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "        Log.i(TAG, \"yolo detector: ${if (yoloDetector != null) \"ready\" else \"unavailable\"}\")\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "    override fun onBind(intent: Intent?): IBinder = binder\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "\r\n", "ts": 1790300051.547114}
+{"type": "output", "data": "    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "        if (intent?.action == ACTION_START) {\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "            val resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0)\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "            @Suppress(\"DEPRECATION\")\r\n            val data = if (Build.VERSION.SDK_INT >= 33)\r\n                intent.getParcelableExtra(EXTRA_RESULT_DATA, Intent::class.java)\r\n            else intent.getParcelableExtra(EXTRA_RESULT_DATA)\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "            startForegroundInternal()\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "            startCapture(resultCode, data)\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "        return START_STICKY\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "    private fun startForegroundInternal() {\r\n", "ts": 1790300051.5476835}
+{"type": "output", "data": "        createChannel()\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        val notification = buildNotification()\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        val type = if (Build.VERSION.SDK_INT >= 29)\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "            ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION else 0\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        ServiceCompat.startForeground(this, NOTIF_ID, notification, type)\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "    private fun createChannel() {\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        val nm = getSystemService(NotificationManager::class.java)\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        val ch = NotificationChannel(CHANNEL_ID, \"\u8fde\u7ebf\u00b7\u5c4f\u5e55\u8bc6\u522b\", NotificationManager.IMPORTANCE_LOW)\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        ch.description = \"\u5c4f\u5e55\u8bc6\u522b\u4e0e\u60ac\u6d6e\u7a97\u6307\u5bfc\u8fd0\u884c\u4e2d\"\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        nm.createNotificationChannel(ch)\r\n    }\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "    private fun buildNotification(contentText: String? = null): Notification {\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        val pi = PendingIntent.getActivity(\r\n            this, 0,\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "            Intent(this, AssistActivity::class.java),\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "            PendingIntent.FLAG_IMMUTABLE\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        )\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "        return Notification.Builder(this, CHANNEL_ID)\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "            .setContentTitle(\"timez37\u00b7\u8fde\u7ebf\u8bc6\u522b\u8fd0\u884c\u4e2d\")\r\n", "ts": 1790300051.5481834}
+{"type": "output", "data": "            .setContentText(contentText ?: \"\u4ec5\u8bc6\u522b\u5c40\u9762\u5e76\u7ed9\u51fa\u8d70\u6cd5\u5efa\u8bae\uff0c\u4e0d\u4f1a\u81ea\u52a8\u8d70\u5b50\")\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "            .setSmallIcon(R.drawable.ic_launcher)\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "            .setOngoing(true)\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "            .setContentIntent(pi)\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "            .build()\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.5491621}
+{"type": "output", "data": "\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "    // ==================== \u622a\u5c4f ====================\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "    private fun startCapture(resultCode: Int, data: Intent?) {\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        if (mediaProjection != null || data == null) return\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        overlayClosed = false\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        paused = false\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        val metrics = screenMetrics()\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        val w = metrics.widthPixels\r\n", "ts": 1790300051.549708}
+{"type": "output", "data": "        val h = metrics.heightPixels\r\n        val dpi = metrics.densityDpi\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        mediaProjection = projectionManager.getMediaProjection(resultCode, data)\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        config.frameSize = w to h\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        val reader = ImageReader.newInstance(w, h, PixelFormat.RGBA_8888, 2)\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        reader.setOnImageAvailableListener(::onImageAvailable, frameHandler)\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        imageReader = reader\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        virtualDisplay = mediaProjection?.createVirtualDisplay(\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "            \"assist-capture\", w, h, dpi,\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "            reader.surface, null, workerHandler\r\n", "ts": 1790300051.550233}
+{"type": "output", "data": "        )\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "        Log.i(TAG, \"capture started: ${w}x$h\")\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "\r\n        val engineMode = config.engineMode\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "        analysisEngine = when (engineMode) {\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "            \"remote\" -> RemoteAnalysisEngine(\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                host = config.remoteHost,\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                port = config.remotePort,\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                listener = analysisListener,\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                initialDepth = config.searchDepth,\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                initialThreads = config.threads\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "            )\r\n            else -> AnalysisEngine(\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                this, analysisListener, config.searchDepth,\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "                initialThreads = config.threads\r\n", "ts": 1790300051.550737}
+{"type": "output", "data": "            )\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        analysisEngine?.setHash(config.hashMb)\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        analysisEngine?.start()\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "    @Suppress(\"DEPRECATION\")\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "    private fun screenMetrics(): DisplayMetrics {\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        val dm = DisplayMetrics()\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        val wm = getSystemService(WINDOW_SERVICE) as WindowManager\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        @Suppress(\"DEPRECATION\")\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        wm.defaultDisplay.getRealMetrics(dm)\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "        return dm\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790300051.551237}
+{"type": "output", "data": "    private fun onImageAvailable(reader: ImageReader) {\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        val now = System.currentTimeMillis()\r\n        val slowPath = !userDragging && overlayIntersectsBoard()\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        val interval = if (slowPath) OVERLAY_FRAME_INTERVAL_MS else MIN_FRAME_INTERVAL_MS\r\n        if (now - lastFrameTs < interval) {\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            reader.acquireLatestImage()?.close()\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            return\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        lastFrameTs = now\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        var needRestoreHide = false\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "        try {\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            val needHide = slowPath && (overlayPanel?.alpha ?: 0f) > 0f\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            if (needHide) {\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "                mainHandler.post { overlayPanel?.alpha = 0f }\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "                needRestoreHide = true\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "                Thread.sleep(60)\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            }\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            val image = reader.acquireLatestImage() ?: return\r\n", "ts": 1790300051.5517707}
+{"type": "output", "data": "            try {\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                val frame = imageToFrame(image)\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                if (!pendingFrame) {\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                    pendingFrame = true\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                    workerHandler.post { pendingFrame = false; handleFrame(frame) }\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                }\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "            } finally {\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "                image.close()\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "            }\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "        } catch (e: Exception) {\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "            Log.w(TAG, \"onImageAvailable failed\", e)\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "        } finally {\r\n", "ts": 1790300051.5522711}
+{"type": "output", "data": "            if (needRestoreHide) {\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "                mainHandler.post { overlayPanel?.alpha = 1f }\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "            }\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "    private var frameRowBytes: ByteArray? = null\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "\r\n    private fun imageToFrame(image: Image): Frame {", "ts": 1790300051.5527744}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5527744}
+{"type": "output", "data": "        val plane = image.planes[0]\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "        val rowStride = plane.rowStride\r\n        val pixelStride = plane.pixelStride\r\n        val buffer = plane.buffer\r\n        val w = image.width\r\n        val h = image.height\r\n        val px = IntArray(w * h)\r\n        if (pixelStride == 4) {\r\n            var row = frameRowBytes\r\n            if (row == null || row.size < w * 4) row = ByteArray(w * 4)\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "            frameRowBytes = row\r\n            var p = 0\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "            for (y in 0 until h) {\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "                buffer.position(y * rowStride)\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "                buffer.get(row, 0, w * 4)\r\n", "ts": 1790300051.553383}
+{"type": "output", "data": "                var i = 0\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                while (i < w * 4) {\r\n                    px[p++] = (0xFF shl 24) or\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                            ((row[i].toInt() and 0xFF) shl 16) or\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                            ((row[i + 1].toInt() and 0xFF) shl 8) or\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                            (row[i + 2].toInt() and 0xFF)\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                    i += 4\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                }\r\n            }\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "        } else {\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "            for (y in 0 until h) {\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                val rowStart = y * rowStride\r\n                for (x in 0 until w) {\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                    val off = rowStart + x * pixelStride\r\n", "ts": 1790300051.5538867}
+{"type": "output", "data": "                    val r = buffer.get(off).toInt() and 0xFF\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "                    val g = buffer.get(off + 1).toInt() and 0xFF\r\n                    val b = buffer.get(off + 2).toInt() and 0xFF\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "                    px[y * w + x] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "                }\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "            }\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        return Frame(w, h, px)\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "    private fun debugSaveFrameIfRequested(frame: Frame) {\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        if (!BuildConfig.DEBUG) return\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        val trigger = File(\"/sdcard/assist_debug_save\")\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        if (!trigger.exists()) return\r\n", "ts": 1790300051.5543878}
+{"type": "output", "data": "        trigger.delete()\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "        try {\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "            val dir = getExternalFilesDir(null) ?: filesDir\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "            val outPath = File(dir, \"assist_frame.raw\").absolutePath\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "            DataOutputStream(FileOutputStream(outPath)).use { out ->\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                out.writeInt(0x41534652)\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                out.writeInt(frame.width)\r\n                out.writeInt(frame.height)\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                for (p in frame.argb) {\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                    out.writeByte((p shr 16) and 0xFF)\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                    out.writeByte((p shr 8) and 0xFF)\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                    out.writeByte(p and 0xFF)\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "                }\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "            }\r\n", "ts": 1790300051.554909}
+{"type": "output", "data": "            Log.i(TAG, \"debug frame saved $outPath\")\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        } catch (e: Exception) {\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "            Log.w(TAG, \"debug frame save failed\", e)\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        }\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "    }\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "    // ==================== \u8bc6\u522b\u4e0e\u5206\u6790 ====================\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "    private fun cropHint(frame: Frame): DoubleArray? {\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        val g = sessionGrid ?: return null\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        val x0 = g.nx0 * frame.width\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        val y0 = g.ny0 * frame.height\r\n        val x1 = g.nx1 * frame.width\r\n", "ts": 1790300051.555409}
+{"type": "output", "data": "        val y1 = g.ny1 * frame.height\r\n        val mx = (x1 - x0) / 8.0 * 1.2\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val my = (y1 - y0) / 9.0 * 1.2\r\n        val cx0 = max(0.0, x0 - mx)\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val cy0 = max(0.0, y0 - my)\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val cx1 = min(frame.width.toDouble(), x1 + mx)\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val cy1 = min(frame.height.toDouble(), y1 + my)\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val w = ((cx1 - cx0).toInt() / 16) * 16\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        val h = ((cy1 - cy0).toInt() / 16) * 16\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        if (w < 64 || h < 64) return null\r\n", "ts": 1790300051.5559092}
+{"type": "output", "data": "        return doubleArrayOf(cx0, cy0, cx0 + w, cy0 + h)\r\n    }\r\n", "ts": 1790300051.5564504}
+{"type": "output", "data": "\r\n", "ts": 1790300051.5564504}
+{"type": "output", "data": "    private fun handleFrame(frame: Frame) {\r\n", "ts": 1790300051.5564504}
+{"type": "output", "data": "        if (paused || manualMode) return\r\n", "ts": 1790300051.5564504}
+{"type": "output", "data": "        debugSaveFrameIfRequested(frame)\r\n        val yolo = yoloDetector ?: run {\r\n", "ts": 1790300051.5564504}
+{"type": "end", "exit_code": 0, "ts": 1790300051.5824163}

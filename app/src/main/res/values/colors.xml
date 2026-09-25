@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black_overlay">#66000000</color>
+
+    <!-- 保留旧配色给对弈页图标 tint 使用，不删 -->
+    <color name="choice_color_1">#fffa00</color>
+    <color name="choice_color_2">#ff9500</color>
+    <color name="choice_color_3">#5ed500</color>
+    <color name="choice_color_4">#ffbb00</color>
+    <color name="choice_color_5">#00c6b0</color>
+
+    <!-- Material 3 fallback（Android 12 以下 / 未启用动态色时使用） -->
+    <color name="md_theme_light_primary">#8B4E00</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#FFDCC0</color>
+    <color name="md_theme_light_onPrimaryContainer">#2C1600</color>
+    <color name="md_theme_light_secondary">#725A42</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#FFDCC0</color>
+    <color name="md_theme_light_onSecondaryContainer">#291806</color>
+    <color name="md_theme_light_surface">#FFF8F5</color>
+    <color name="md_theme_light_onSurface">#221A11</color>
+    <color name="md_theme_light_surfaceVariant">#F3DFD1</color>
+    <color name="md_theme_light_onSurfaceVariant">#52443A</color>
+    <color name="md_theme_light_outline">#857468</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+
+    <color name="md_theme_dark_primary">#FFB77A</color>
+    <color name="md_theme_dark_onPrimary">#4A2800</color>
+    <color name="md_theme_dark_primaryContainer">#6A3C00</color>
+    <color name="md_theme_dark_onPrimaryContainer">#FFDCC0</color>
+    <color name="md_theme_dark_secondary">#E1C1A4</color>
+    <color name="md_theme_dark_onSecondary">#402C19</color>
+    <color name="md_theme_dark_secondaryContainer">#58422D</color>
+    <color name="md_theme_dark_onSecondaryContainer">#FFDCC0</color>
+    <color name="md_theme_dark_surface">#1A120A</color>
+    <color name="md_theme_dark_onSurface">#F1DFD1</color>
+    <color name="md_theme_dark_surfaceVariant">#52443A</color>
+    <color name="md_theme_dark_onSurfaceVariant">#D7C2B4</color>
+    <color name="md_theme_dark_outline">#9F8D80</color>
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
+    <color name="move_history_background">#0D000000</color>
+    <color name="game_hint_background">#80FFFFFF</color>
+    <color name="boardbg_repeat">#00000000</color>
+</resources>

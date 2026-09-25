@@ -1,0 +1,8 @@
+{"type": "start", "command": "powershell -Command \"Get-ChildItem -Recurse app/src/main/java | Measure-Object -Property Length -Sum | Select-Object Count,Sum; (Get-ChildItem -Recurse app/src/main/java | Measure-Object).Count\"", "pid": 5164, "ts": 1790257224.3029563}
+{"type": "output", "data": "\r\n", "ts": 1790257224.5409853}
+{"type": "output", "data": "Count    Sum\r\n", "ts": 1790257224.5468857}
+{"type": "output", "data": "-----    ---\r\n", "ts": 1790257224.5473883}
+{"type": "output", "data": "   72 597714\r\n", "ts": 1790257224.5473883}
+{"type": "output", "data": "90\r\n", "ts": 1790257224.5473883}
+{"type": "output", "data": "\r\n\r\n", "ts": 1790257224.5473883}
+{"type": "end", "exit_code": 0, "ts": 1790257224.562073}

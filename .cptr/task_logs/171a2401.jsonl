@@ -1,0 +1,24 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/ScreenAssistService.kt' -Encoding UTF8 | Select-Object -Skip 345 -First 40\"", "pid": 29028, "ts": 1790300105.172635}
+{"type": "output", "data": "                    out.writeByte((p shr 16) and 0xFF)\r\n", "ts": 1790300106.0301597}
+{"type": "output", "data": "                    out.writeByte((p shr 8) and 0xFF)\r\n", "ts": 1790300106.030663}
+{"type": "output", "data": "                    out.writeByte(p and 0xFF)\r\n                }\r\n            }\r\n            Log.i(TAG, \"debug frame saved $outPath\")\r\n", "ts": 1790300106.030663}
+{"type": "output", "data": "        } catch (e: Exception) {\r\n            Log.w(TAG, \"debug frame save failed\", e)\r\n        }\r\n    }\r\n\r\n    // ==================== \u8bc6\u522b\u4e0e\u5206\u6790 ====================\r\n", "ts": 1790300106.030663}
+{"type": "output", "data": "\r\n    private fun cropHint(frame: Frame): DoubleArray? {\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val g = sessionGrid ?: return null\r\n        val x0 = g.nx0 * frame.width\r\n        val y0 = g.ny0 * frame.height\r\n        val x1 = g.nx1 * frame.width\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val y1 = g.ny1 * frame.height\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val mx = (x1 - x0) / 8.0 * 1.2\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val my = (y1 - y0) / 9.0 * 1.2\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val cx0 = max(0.0, x0 - mx)\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val cy0 = max(0.0, y0 - my)\r\n        val cx1 = min(frame.width.toDouble(), x1 + mx)\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val cy1 = min(frame.height.toDouble(), y1 + my)\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val w = ((cx1 - cx0).toInt() / 16) * 16\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        val h = ((cy1 - cy0).toInt() / 16) * 16\r\n", "ts": 1790300106.0312252}
+{"type": "output", "data": "        if (w < 64 || h < 64) return null\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "        return doubleArrayOf(cx0, cy0, cx0 + w, cy0 + h)\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "    }\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "    private fun handleFrame(frame: Frame) {\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "        if (paused || manualMode) return\r\n", "ts": 1790300106.0317276}
+{"type": "output", "data": "        debugSaveFrameIfRequested(frame)\r\n        val yolo = yoloDetector ?: run {\r\n", "ts": 1790300106.0322332}
+{"type": "output", "data": "            yoloMissStreak++\r\n            if (yoloMissStreak == 1 || yoloMissStreak % 20 == 0) {\r\n                setStatus(\"\u8bc6\u522b\u5f15\u64ce\u521d\u59cb\u5316\u5931\u8d25\uff1a\u8bf7\u5c1d\u8bd5\u91cd\u542f\u5e94\u7528\uff08\u91cd\u88c5\u53ef\u4fee\u590d\uff09\")\r\n            }\r\n            return\r\n", "ts": 1790300106.0322332}
+{"type": "end", "exit_code": 0, "ts": 1790300106.0703344}

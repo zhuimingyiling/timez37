@@ -1,0 +1,26 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/PieceMatcher.kt' -TotalCount 30 -Encoding UTF8\"", "pid": 20192, "ts": 1790299834.8893554}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790299835.8167195}
+{"type": "output", "data": "\r\n", "ts": 1790299835.8167195}
+{"type": "output", "data": "import android.content.Context\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "import android.util.Log\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "import com.timez.chess.gamelogic.Piece\r\nimport kotlin.collections.iterator\r\nimport kotlin.math.sqrt\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "/**\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": " * \u6a21\u677f\u5339\u914d\u68cb\u5b50\u8bc6\u522b\u5668\u3002\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": " * YOLO \u53ea\u8d1f\u8d23\u7ed9\u51fa\u68cb\u76d8\u7ebf\u6846\u4f4d\u7f6e\uff0c\u672c\u7c7b\u8d1f\u8d23\u5728\u6846\u5185 9\u00d710 \u4e2a\u4ea4\u53c9\u70b9\u4e0a\uff0c\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": " * \u7528\u5f52\u4e00\u5316\u4e92\u76f8\u5173\uff08NCC\uff09\u6bd4\u5bf9 14 \u4e2a\u68cb\u5b50\u6a21\u677f\uff0c\u8f93\u51fa canonical \u68cb\u76d8\u3002\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": " */\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "class PieceMatcher(private val context: Context) {\r\n", "ts": 1790299835.8174868}
+{"type": "output", "data": "\r\n    companion object {", "ts": 1790299835.8180585}
+{"type": "output", "data": "\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "        private const val TAG = \"PieceMatcher\"\r\n        private const val TSIZE = 48\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "        private const val MATCH_THRESHOLD = 0.50f\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "        private val CLASSES = arrayOf(\r\n            \"r_che\", \"r_ma\", \"r_xiang\", \"r_shi\", \"r_shuai\", \"r_pao\", \"r_bing\",\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "            \"b_che\", \"b_ma\", \"b_xiang\", \"b_shi\", \"b_jiang\", \"b_pao\", \"b_zu\"\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "        )\r\n", "ts": 1790299835.8180585}
+{"type": "output", "data": "        private val SKINS = arrayOf(\"wood\", \"green\", \"white\")\r\n", "ts": 1790299835.8185594}
+{"type": "output", "data": "\r\n", "ts": 1790299835.8185594}
+{"type": "output", "data": "        private val CLASS_TO_PIECE: Map<String, Int> = mapOf(\r\n", "ts": 1790299835.8185594}
+{"type": "output", "data": "            \"r_che\" to Piece.WJU, \"r_ma\" to Piece.WMA, \"r_xiang\" to Piece.WXIANG,\r\n", "ts": 1790299835.8185594}
+{"type": "end", "exit_code": 0, "ts": 1790299835.8488677}

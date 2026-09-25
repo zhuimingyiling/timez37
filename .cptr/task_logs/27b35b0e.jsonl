@@ -1,0 +1,5 @@
+{"type": "start", "command": "powershell -Command \"[System.IO.File]::ReadAllText('app/src/main/java/com/timez/chess/assist/ScreenAssistService.kt',[System.Text.Encoding]::UTF8).Substring(17000,34868)\"", "pid": 25760, "ts": 1790259554.0598433}
+{"type": "output", "data": "Exception calling \"Substring\" with \"2\" argument(s): \"Index and length must refer to a location within the string.\r\nParameter name: length\"\r\nAt line:1 char:1\r\n+ [System.IO.File]::ReadAllText('app/src/main/java/com/timez/chess/assi ...\r\n", "ts": 1790259554.276803}
+{"type": "output", "data": "+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException\r\n    + FullyQualifiedErrorId : ArgumentOutOfRangeException\r\n", "ts": 1790259554.276803}
+{"type": "output", "data": " \r\n", "ts": 1790259554.2773063}
+{"type": "end", "exit_code": 1, "ts": 1790259554.291629}

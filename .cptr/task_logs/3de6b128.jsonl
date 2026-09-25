@@ -1,0 +1,755 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/ScreenAssistService.kt' -Encoding UTF8\"", "pid": 26248, "ts": 1790300025.0251606}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790300025.2078302}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2078302}
+{"type": "output", "data": "import android.app.Notification\r\nimport android.app.NotificationChannel\r\n", "ts": 1790300025.2078302}
+{"type": "output", "data": "import android.app.NotificationManager\r\n", "ts": 1790300025.2078302}
+{"type": "output", "data": "import android.app.PendingIntent\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.app.Service\r\nimport android.content.Intent\r\nimport android.content.pm.ServiceInfo\r\nimport android.graphics.PixelFormat\r\nimport android.hardware.display.DisplayManager\r\nimport android.hardware.display.VirtualDisplay\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.media.Image\r\nimport android.media.ImageReader\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.media.projection.MediaProjection\r\nimport android.media.projection.MediaProjectionManager\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.Binder\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.Build\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.Handler\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.HandlerThread\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.IBinder\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.os.Looper\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.provider.Settings\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.util.DisplayMetrics\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.util.Log\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.view.Gravity\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import android.view.WindowManager\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import androidx.core.app.ServiceCompat\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import com.timez.chess.assist.ui.AssistActivity\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import com.timez.chess.R\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import com.timez.chess.assist.ui.OverlayAction\r\n", "ts": 1790300025.2083302}
+{"type": "output", "data": "import com.timez.chess.assist.ui.OverlayModel\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.assist.ui.OverlayPanelView\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.gamelogic.Piece\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.gamelogic.Zobrist\r\nimport com.timez.chess.openbook.BHOpenBook\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.openbook.BookData\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.openbook.OpenBook\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import com.timez.chess.BuildConfig\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import java.io.DataOutputStream\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import java.io.File\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import java.io.FileOutputStream\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import kotlin.math.max\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "import kotlin.math.min\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2092495}
+{"type": "output", "data": "class ScreenAssistService : Service() {\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "    companion object {\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val TAG = \"AssistService\"\r\n        const val ACTION_START = \"com.timez.chess.assist.START\"\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        const val EXTRA_RESULT_CODE = \"result_code\"\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        const val EXTRA_RESULT_DATA = \"result_data\"\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val CHANNEL_ID = \"assist_foreground\"\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val NOTIF_ID = 1001\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val MIN_FRAME_INTERVAL_MS = 120L\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val OVERLAY_FRAME_INTERVAL_MS = 1400L\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val MIN_RECOGNIZE_INTERVAL_MS = 150L\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        private const val SUGGEST_STABLE_MS = 1200L\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "        const val MIN_RECOGNIZED_PIECES = 3\r\n    }\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2097495}
+{"type": "output", "data": "    inner class CastBinder : Binder() {\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "        fun service(): ScreenAssistService = this@ScreenAssistService\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "    fun isCapturing(): Boolean = mediaProjection != null && virtualDisplay != null\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "    fun getStatusText(): String = lastStatusText\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "    /** \u624b\u673a\u7aef UI \u8c03\u7528\uff1a\u70ed\u66f4\u65b0\u5f15\u64ce\u7ebf\u7a0b\u6570\uff08\u672c\u5730/\u8fdc\u7a0b\u90fd\u751f\u6548\uff09 */\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "    fun setEngineThreads(n: Int) {\r\n", "ts": 1790300025.2106068}
+{"type": "output", "data": "        config.threads = n\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "        analysisEngine?.setThreads(n)\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "\r\n    private val config by lazy { AssistConfig(this) }\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "    private var mediaProjection: MediaProjection? = null\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "    private var virtualDisplay: VirtualDisplay? = null\r\n    private var imageReader: ImageReader? = null\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "    private val projectionManager by lazy {\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "        getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2111378}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private val workerThread = HandlerThread(\"assist-worker\").apply { start() }\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private val workerHandler = Handler(workerThread.looper)\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private val frameThread = HandlerThread(\"assist-frame\").apply { start() }\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private val frameHandler = Handler(frameThread.looper)\r\n    private val mainHandler = Handler(Looper.getMainLooper())\r\n\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private var lastFrameTs = 0L\r\n    private var lastRecognizeTs = 0L\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    private var pendingFrame = false\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    @Volatile private var paused = false\r\n", "ts": 1790300025.2116408}
+{"type": "output", "data": "    @Volatile private var manualMode = false\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var manualSelected: Pair<Int, Int>? = null\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var overlayClosed = false\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var userDragging = false\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    private var tracker = BoardTracker(3)\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    private var yoloDetector: YoloBoardDetector? = null\r\n\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var yoloMissStreak = 0\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var cropUnstableStreak = 0\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "    @Volatile private var sessionGrid: BoardGrid? = null\r\n", "ts": 1790300025.2121413}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    private var analysisEngine: AssistEngine? = null\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var engineReady = false\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var engineErrorText: String? = null\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var stableUcci: String? = null\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var stableSince = 0L\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var searchSettled = false\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var currentFen = \"\"\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    @Volatile private var currentPieces: IntArray? = null\r\n    @Volatile private var currentCanonical: Array<IntArray>? = null\r\n    private var currentOrientation = Orientation.STANDARD", "ts": 1790300025.2126458}
+{"type": "output", "data": "\r\n    private var lastAnalysis: AnalysisResult? = null\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    private var selectedCandidate = 0\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "\r\n    private var bookMoves: List<BookData>? = null\r\n    private var openBook: BHOpenBook? = null\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "    private var openBookFailed = false\r\n", "ts": 1790300025.2126458}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2134335}
+{"type": "output", "data": "    private class HistoryEntry(val result: RecognitionResult, val redGo: Boolean, val fen: String)\r\n", "ts": 1790300025.2134335}
+{"type": "output", "data": "    private val history = ArrayDeque<HistoryEntry>()\r\n", "ts": 1790300025.2134335}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2134335}
+{"type": "output", "data": "    private val strengthLevels = listOf(\"\u5feb\u901f\u00b7\u6df1\u5ea612\" to 12, \"\u6807\u51c6\u00b7\u6df1\u5ea620\" to 20, \"\u5f3a\u52b2\u00b7\u6df1\u5ea624\" to 24)\r\n", "ts": 1790300025.2134335}
+{"type": "output", "data": "    private var strengthIndex = 0\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    private val hashLevels = listOf(256, 512, 1024, 2048)\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    private var hashIndex = 0\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    private var windowManager: WindowManager? = null\r\n    private var overlayPanel: OverlayPanelView? = null\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    private var overlayParams: WindowManager.LayoutParams? = null\r\n\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    private val binder = CastBinder()\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "    override fun onCreate() {\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "        super.onCreate()\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "        tracker = BoardTracker(config.confirmCount)\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "        val idx = strengthLevels.indexOfFirst { it.second == config.searchDepth }\r\n", "ts": 1790300025.2139394}
+{"type": "output", "data": "        strengthIndex = if (idx >= 0) idx else 1\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "        val hidx = hashLevels.indexOfFirst { it == config.hashMb }\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "        hashIndex = if (hidx >= 0) hidx else 0\r\n        yoloDetector = try {", "ts": 1790300025.2144437}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "            YoloBoardDetector(this)\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "        } catch (t: Throwable) {\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "            Log.w(TAG, \"yolo detector init failed\", t)\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "            null\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "        Log.i(TAG, \"yolo detector: ${if (yoloDetector != null) \"ready\" else \"unavailable\"}\")\r\n", "ts": 1790300025.2144437}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "    override fun onBind(intent: Intent?): IBinder = binder\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "        if (intent?.action == ACTION_START) {\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "            val resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0)\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "            @Suppress(\"DEPRECATION\")\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "            val data = if (Build.VERSION.SDK_INT >= 33)\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "                intent.getParcelableExtra(EXTRA_RESULT_DATA, Intent::class.java)\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "            else intent.getParcelableExtra(EXTRA_RESULT_DATA)\r\n", "ts": 1790300025.2149954}
+{"type": "output", "data": "            startForegroundInternal()\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "            startCapture(resultCode, data)\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        return START_STICKY\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "    private fun startForegroundInternal() {\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        createChannel()\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        val notification = buildNotification()\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        val type = if (Build.VERSION.SDK_INT >= 29)\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "            ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION else 0\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        ServiceCompat.startForeground(this, NOTIF_ID, notification, type)\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "    private fun createChannel() {\r\n", "ts": 1790300025.2154956}
+{"type": "output", "data": "        val nm = getSystemService(NotificationManager::class.java)\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "        val ch = NotificationChannel(CHANNEL_ID, \"\u8fde\u7ebf\u00b7\u5c4f\u5e55\u8bc6\u522b\", NotificationManager.IMPORTANCE_LOW)\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "        ch.description = \"\u5c4f\u5e55\u8bc6\u522b\u4e0e\u60ac\u6d6e\u7a97\u6307\u5bfc\u8fd0\u884c\u4e2d\"\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "        nm.createNotificationChannel(ch)\r\n    }\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "    private fun buildNotification(contentText: String? = null): Notification {\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "        val pi = PendingIntent.getActivity(\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "            this, 0,\r\n            Intent(this, AssistActivity::class.java),\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "            PendingIntent.FLAG_IMMUTABLE\r\n        )\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "        return Notification.Builder(this, CHANNEL_ID)\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "            .setContentTitle(\"timez37\u00b7\u8fde\u7ebf\u8bc6\u522b\u8fd0\u884c\u4e2d\")\r\n", "ts": 1790300025.2159956}
+{"type": "output", "data": "            .setContentText(contentText ?: \"\u4ec5\u8bc6\u522b\u5c40\u9762\u5e76\u7ed9\u51fa\u8d70\u6cd5\u5efa\u8bae\uff0c\u4e0d\u4f1a\u81ea\u52a8\u8d70\u5b50\")\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "            .setSmallIcon(R.drawable.ic_launcher)\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "            .setOngoing(true)\r\n            .setContentIntent(pi)\r\n            .build()\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "    // ==================== \u622a\u5c4f ====================\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "\r\n    private fun startCapture(resultCode: Int, data: Intent?) {\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        if (mediaProjection != null || data == null) return\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        overlayClosed = false\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        paused = false\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        val metrics = screenMetrics()\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        val w = metrics.widthPixels\r\n", "ts": 1790300025.216519}
+{"type": "output", "data": "        val h = metrics.heightPixels\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        val dpi = metrics.densityDpi\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        mediaProjection = projectionManager.getMediaProjection(resultCode, data)\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        config.frameSize = w to h\r\n        val reader = ImageReader.newInstance(w, h, PixelFormat.RGBA_8888, 2)\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        reader.setOnImageAvailableListener(::onImageAvailable, frameHandler)\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        imageReader = reader\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "        virtualDisplay = mediaProjection?.createVirtualDisplay(\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "            \"assist-capture\", w, h, dpi,\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,\r\n", "ts": 1790300025.2174318}
+{"type": "output", "data": "            reader.surface, null, workerHandler\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "        )\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "        Log.i(TAG, \"capture started: ${w}x$h\")\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "        val engineMode = config.engineMode\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "        analysisEngine = when (engineMode) {\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "            \"remote\" -> RemoteAnalysisEngine(\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "                host = config.remoteHost,\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "                port = config.remotePort,\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "                listener = analysisListener,\r\n                initialDepth = config.searchDepth,\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "                initialThreads = config.threads\r\n", "ts": 1790300025.2179766}
+{"type": "output", "data": "            )\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "            else -> AnalysisEngine(\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "                this, analysisListener, config.searchDepth,\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "                initialThreads = config.threads\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "            )\r\n        }\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        analysisEngine?.setHash(config.hashMb)\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        analysisEngine?.start()\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "    @Suppress(\"DEPRECATION\")\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "    private fun screenMetrics(): DisplayMetrics {\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        val dm = DisplayMetrics()\r\n        val wm = getSystemService(WINDOW_SERVICE) as WindowManager\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        @Suppress(\"DEPRECATION\")\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        wm.defaultDisplay.getRealMetrics(dm)\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        return dm\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "    private fun onImageAvailable(reader: ImageReader) {\r\n", "ts": 1790300025.2184765}
+{"type": "output", "data": "        val now = System.currentTimeMillis()\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "        val slowPath = !userDragging && overlayIntersectsBoard()\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "        val interval = if (slowPath) OVERLAY_FRAME_INTERVAL_MS else MIN_FRAME_INTERVAL_MS\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "        if (now - lastFrameTs < interval) {\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "            reader.acquireLatestImage()?.close()\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "            return\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "        }\r\n        lastFrameTs = now\r\n        var needRestoreHide = false\r\n        try {\r\n            val needHide = slowPath && (overlayPanel?.alpha ?: 0f) > 0f\r\n            if (needHide) {\r\n                mainHandler.post { overlayPanel?.alpha = 0f }\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "                needRestoreHide = true\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "                Thread.sleep(60)\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2193549}
+{"type": "output", "data": "            val image = reader.acquireLatestImage() ?: return\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "            try {\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                val frame = imageToFrame(image)\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                if (!pendingFrame) {\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                    pendingFrame = true\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                    workerHandler.post { pendingFrame = false; handleFrame(frame) }\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                }\r\n            } finally {\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "                image.close()\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "        } catch (e: Exception) {\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "            Log.w(TAG, \"onImageAvailable failed\", e)\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "        } finally {\r\n", "ts": 1790300025.2198548}
+{"type": "output", "data": "            if (needRestoreHide) {\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "                mainHandler.post { overlayPanel?.alpha = 1f }\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "    private var frameRowBytes: ByteArray? = null\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "\r\n", "ts": 1790300025.220421}
+{"type": "output", "data": "    private fun imageToFrame(image: Image): Frame {\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val plane = image.planes[0]\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val rowStride = plane.rowStride\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val pixelStride = plane.pixelStride\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val buffer = plane.buffer\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val w = image.width\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val h = image.height\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        val px = IntArray(w * h)\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "        if (pixelStride == 4) {\r\n            var row = frameRowBytes\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "            if (row == null || row.size < w * 4) row = ByteArray(w * 4)\r\n", "ts": 1790300025.220923}
+{"type": "output", "data": "            frameRowBytes = row\r\n            var p = 0\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "            for (y in 0 until h) {\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                buffer.position(y * rowStride)\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                buffer.get(row, 0, w * 4)\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                var i = 0\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                while (i < w * 4) {\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                    px[p++] = (0xFF shl 24) or\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                            ((row[i].toInt() and 0xFF) shl 16) or\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                            ((row[i + 1].toInt() and 0xFF) shl 8) or\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                            (row[i + 2].toInt() and 0xFF)\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                    i += 4\r\n", "ts": 1790300025.221441}
+{"type": "output", "data": "                }\r\n            }\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "        } else {\r\n            for (y in 0 until h) {\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                val rowStart = y * rowStride\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                for (x in 0 until w) {\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                    val off = rowStart + x * pixelStride\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                    val r = buffer.get(off).toInt() and 0xFF\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                    val g = buffer.get(off + 1).toInt() and 0xFF\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                    val b = buffer.get(off + 2).toInt() and 0xFF\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                    px[y * w + x] = (0xFF shl 24) or (r shl 16) or (g shl 8) or b\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2219424}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "        return Frame(w, h, px)\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "    private fun debugSaveFrameIfRequested(frame: Frame) {\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "        if (!BuildConfig.DEBUG) return\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "        val trigger = File(\"/sdcard/assist_debug_save\")\r\n", "ts": 1790300025.2224424}
+{"type": "output", "data": "        if (!trigger.exists()) return\r\n        trigger.delete()\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "        try {\r\n            val dir = getExternalFilesDir(null) ?: filesDir\r\n            val outPath = File(dir, \"assist_frame.raw\").absolutePath\r\n            DataOutputStream(FileOutputStream(outPath)).use { out ->\r\n                out.writeInt(0x41534652)\r\n                out.writeInt(frame.width)\r\n                out.writeInt(frame.height)\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "                for (p in frame.argb) {\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "                    out.writeByte((p shr 16) and 0xFF)\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "                    out.writeByte((p shr 8) and 0xFF)\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "                    out.writeByte(p and 0xFF)\r\n                }\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "            }\r\n            Log.i(TAG, \"debug frame saved $outPath\")\r\n        } catch (e: Exception) {\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "            Log.w(TAG, \"debug frame save failed\", e)\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "        }\r\n    }\r\n\r\n    // ==================== \u8bc6\u522b\u4e0e\u5206\u6790 ====================\r\n\r\n    private fun cropHint(frame: Frame): DoubleArray? {\r\n        val g = sessionGrid ?: return null\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "        val x0 = g.nx0 * frame.width\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "        val y0 = g.ny0 * frame.height\r\n", "ts": 1790300025.2229424}
+{"type": "output", "data": "        val x1 = g.nx1 * frame.width\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val y1 = g.ny1 * frame.height\r\n        val mx = (x1 - x0) / 8.0 * 1.2\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val my = (y1 - y0) / 9.0 * 1.2\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val cx0 = max(0.0, x0 - mx)\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val cy0 = max(0.0, y0 - my)\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val cx1 = min(frame.width.toDouble(), x1 + mx)\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val cy1 = min(frame.height.toDouble(), y1 + my)\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val w = ((cx1 - cx0).toInt() / 16) * 16\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        val h = ((cy1 - cy0).toInt() / 16) * 16\r\n", "ts": 1790300025.2238166}
+{"type": "output", "data": "        if (w < 64 || h < 64) return null\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        return doubleArrayOf(cx0, cy0, cx0 + w, cy0 + h)\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "    private fun handleFrame(frame: Frame) {\r\n        if (paused || manualMode) return\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        debugSaveFrameIfRequested(frame)\r\n        val yolo = yoloDetector ?: run {\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "            yoloMissStreak++\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "            if (yoloMissStreak == 1 || yoloMissStreak % 20 == 0) {\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "                setStatus(\"\u8bc6\u522b\u5f15\u64ce\u521d\u59cb\u5316\u5931\u8d25\uff1a\u8bf7\u5c1d\u8bd5\u91cd\u542f\u5e94\u7528\uff08\u91cd\u88c5\u53ef\u4fee\u590d\uff09\")\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "            return\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        val now = System.currentTimeMillis()\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        if (now - lastRecognizeTs < MIN_RECOGNIZE_INTERVAL_MS) return\r\n", "ts": 1790300025.224363}
+{"type": "output", "data": "        lastRecognizeTs = now\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "        val crop = cropHint(frame)\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "        val mapped = try {\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            yolo.detect(frame, crop)\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "        } catch (e: Exception) {\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            Log.w(TAG, \"yolo detect failed\", e)\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            null\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "        if (mapped == null || mapped.pieceCount < MIN_RECOGNIZED_PIECES) {\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            yoloMissStreak++\r\n            sessionGrid = null\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            if (yoloMissStreak == 1 || yoloMissStreak % 10 == 0) {\r\n                setStatus(\"\u6b63\u5728\u8bc6\u522b\u68cb\u76d8\u2026\\n\u8bf7\u8ba9\u68cb\u76d8\u5b8c\u6574\u65e0\u906e\u6321\")\r\n", "ts": 1790300025.2249732}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            return\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "        yoloMissStreak = 0\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "        sessionGrid = mapped.grid\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "        val result = RecognitionResult(\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            mapped.canonical, mapped.screenRaw, mapped.orientation,\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            AssistBoard.validate(mapped.canonical), 0, mapped.pieceCount, mapped.avgScore)\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "        Log.d(TAG, \"rec(yolo): pieces=${mapped.pieceCount} orient=${mapped.orientation} \" +\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                \"issue=${result.issues.size} dropped=${mapped.dropped}\")\r\n        when (tracker.onFrame(result)) {\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            BoardTracker.Event.NEW_BOARD, BoardTracker.Event.NEW_GAME -> {\r\n                cropUnstableStreak = 0\r\n                onBoardConfirmed()\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "            BoardTracker.Event.UNSTABLE -> {\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                if (crop != null) {\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                    cropUnstableStreak++\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                    if (cropUnstableStreak >= 10) {\r\n                        cropUnstableStreak = 0", "ts": 1790300025.2254736}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                        sessionGrid = null\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                    }\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                } else {\r\n", "ts": 1790300025.2254736}
+{"type": "output", "data": "                    cropUnstableStreak = 0\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "                if (tracker.unstableStreak >= 15) {\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "                    setStatus(\"\u8bc6\u522b\u4e0d\u7a33\u5b9a\\n\u8bf7\u8ba9\u68cb\u76d8\u5b8c\u6574\u65e0\u906e\u6321\\n\u753b\u9762\u7a33\u5b9a\u540e\u81ea\u52a8\u6062\u590d\")\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "            BoardTracker.Event.SAME_BOARD -> { }\r\n        }", "ts": 1790300025.2263975}
+{"type": "output", "data": "\r\n    }\r\n\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "    private fun onBoardConfirmed() {\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        val confirmed = tracker.confirmed ?: return\r\n        currentCanonical = confirmed.canonical\r\n        currentPieces = flatten(confirmed.canonical)\r\n        currentOrientation = confirmed.orientation\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        currentFen = AssistBoard.toFen(confirmed.canonical, tracker.redGo)\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        resetSuggestionState()\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        history.addLast(HistoryEntry(confirmed, tracker.redGo, currentFen))\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        if (history.size > 60) history.removeFirst()\r\n", "ts": 1790300025.2263975}
+{"type": "output", "data": "        Log.i(TAG, \"board confirmed: $currentFen\")\r\n", "ts": 1790300025.2272277}
+{"type": "output", "data": "        postRender()\r\n        scheduleAnalysis()\r\n", "ts": 1790300025.2272277}
+{"type": "output", "data": "    }\r\n\r\n    private fun flatten(p: Array<IntArray>): IntArray {\r\n        val out = IntArray(90)\r\n", "ts": 1790300025.2272277}
+{"type": "output", "data": "        for (y in 0 until 10) for (x in 0 until 9) out[y * 9 + x] = p[y][x]\r\n", "ts": 1790300025.2272277}
+{"type": "output", "data": "        return out\r\n", "ts": 1790300025.2272277}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "    private fun resetSuggestionState() {\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "        lastAnalysis = null\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "        selectedCandidate = 0\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "        bookMoves = null\r\n        stableUcci = null\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "        stableSince = 0L\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "        searchSettled = false\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2277412}
+{"type": "output", "data": "    private fun describeSafe(fen: String, ucci: String): String =\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "        try { MoveChinese.describe(fen, ucci) } catch (e: Exception) { ucci }\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "\r\n    private fun scheduleAnalysis() {\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "        workerHandler.post {\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            val canonical = currentCanonical ?: return@post\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            val fen = currentFen\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            if (fen.isEmpty()) return@post\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            val redGo = tracker.redGo\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            val myTurn = redGo == mySideIsRed()\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "            if (myTurn) {\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "                val moves = queryBook(canonical, redGo)\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "                if (!moves.isNullOrEmpty()) {\r\n", "ts": 1790300025.2282417}
+{"type": "output", "data": "                    bookMoves = moves\r\n                    mainHandler.post { postRender() }\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "                    return@post\r\n                }\r\n            }\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "            bookMoves = null\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "            if (!engineReady) {\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "                mainHandler.post { setStatus(engineErrorText ?: \"\u5f15\u64ce\u9884\u70ed\u4e2d\u2026\") }\r\n                return@post\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "            }\r\n            analysisEngine?.request(fen)\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "            if (myTurn) mainHandler.post { setStatus(\"\u5f15\u64ce\u601d\u8003\u4e2d\u2026\") }\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "    private fun queryBook(canonical: Array<IntArray>, redGo: Boolean): List<BookData>? {\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "        if (openBookFailed) return null\r\n", "ts": 1790300025.228742}
+{"type": "output", "data": "        val book = openBook ?: try {\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            BHOpenBook(this).also { openBook = it }\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "        } catch (t: Throwable) {\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            Log.w(TAG, \"openbook init failed\", t)\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            openBookFailed = true\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            return null\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "        }\r\n        return try {\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            book.query(Zobrist.getZobristFromBoard(canonical, redGo), redGo, OpenBook.SortRule.BEST_SCORE)\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "        } catch (t: Throwable) {\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "            Log.w(TAG, \"book query failed\", t)\r\n            null", "ts": 1790300025.2292442}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2292442}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "    private val analysisListener = object : AnalysisEngine.Listener {\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "        override fun onEngineReady() {\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "            engineReady = true\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "            engineErrorText = null\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "            setStatus(\"\u8bc6\u522b\u4e2d\")\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "            scheduleAnalysis()\r\n", "ts": 1790300025.2297442}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "        override fun onSearchUpdate(result: AnalysisResult) {\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "            if (result.fen != currentFen) return\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "            lastAnalysis = result\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "            val best = result.lines.firstOrNull()?.pv?.firstOrNull() ?: result.bestUcci\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "            if (best != stableUcci) {\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "                stableUcci = best\r\n", "ts": 1790300025.2302845}
+{"type": "output", "data": "                stableSince = System.currentTimeMillis()\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "                searchSettled = false\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "            postRender()\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "        override fun onSearchDone(result: AnalysisResult) {\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "            if (result.fen != currentFen) return\r\n            lastAnalysis = result\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "            searchSettled = true\r\n", "ts": 1790300025.2307863}
+{"type": "output", "data": "            mainHandler.post {\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "                setStatus(\"\u8bc6\u522b\u4e2d\")\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "                postRender()\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "        override fun onEngineError(message: String) {\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            Log.w(TAG, \"engine error: $message\")\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            if (overlayClosed) return\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            engineReady = false\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            val short = if (message.length > 40) message.take(40) + \"\u2026\" else message\r\n            engineErrorText = short\r\n", "ts": 1790300025.2313037}
+{"type": "output", "data": "            setStatus(\"\u5f15\u64ce\u5f02\u5e38\uff1a$short\")\r\n        }\r\n    }\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "    // ==================== \u60ac\u6d6e\u7a97 ====================\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "\r\n    private fun ensureOverlay(): OverlayPanelView? {\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        if (overlayPanel != null) return overlayPanel\r\n        if (!Settings.canDrawOverlays(this)) return null\r\n        val wm = getSystemService(WINDOW_SERVICE) as WindowManager\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val panel = OverlayPanelView(this)\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val dm = screenMetrics()\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val (px0, py0) = config.overlayPos\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val panelW = panel.dp(396)\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val panelH = panel.dp(192)\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val x = (if (px0 < 0) (dm.widthPixels - panelW) / 2 else (px0 * dm.widthPixels).toInt())\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "            .coerceIn(0, max(0, dm.widthPixels - panelW))\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val y = (if (py0 < 0) dm.heightPixels - panelH else (py0 * dm.heightPixels).toInt())\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "            .coerceIn(0, max(0, dm.heightPixels - panelH))\r\n", "ts": 1790300025.231804}
+{"type": "output", "data": "        val params = WindowManager.LayoutParams(\r\n            WindowManager.LayoutParams.WRAP_CONTENT,\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            WindowManager.LayoutParams.WRAP_CONTENT,\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,\r\n            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            PixelFormat.TRANSLUCENT\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "        ).apply {\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            gravity = Gravity.TOP or Gravity.START\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            this.x = x\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "            this.y = y\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "        panel.onAction = ::onOverlayAction\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "        panel.onCellTap = ::onManualCellTap\r\n", "ts": 1790300025.2324085}
+{"type": "output", "data": "        panel.onDragStateChange = { dragging -> userDragging = dragging }\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        panel.setDragHandle(params, wm) {\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "            config.overlayPos = params.x.toFloat() / dm.widthPixels to params.y.toFloat() / dm.heightPixels\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        wm.addView(panel, params)\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        overlayPanel = panel\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        overlayParams = params\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        windowManager = wm\r\n        return panel\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "    private fun overlayIntersectsBoard(): Boolean {\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val panel = overlayPanel ?: return false\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val grid = sessionGrid ?: return false\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val params = overlayParams ?: return false\r\n        if (panel.width <= 0 || panel.height <= 0) return false\r\n        val (fw, fh) = config.frameSize\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        if (fw <= 0 || fh <= 0) return false\r\n        val bx0 = grid.nx0 * fw\r\n        val by0 = grid.ny0 * fh\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val bx1 = grid.nx1 * fw\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val by1 = grid.ny1 * fh\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val px0 = params.x\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val py0 = params.y\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val px1 = px0 + panel.width\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        val py1 = py0 + panel.height\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "        return px0 < bx1 && px1 > bx0 && py0 < by1 && py1 > by0\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2329082}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "    private fun onOverlayAction(action: OverlayAction) {\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "        when (action) {\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "            OverlayAction.PAUSE -> {\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "                paused = !paused\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "                setStatus(if (paused) \"\u5df2\u505c\u6b62\u6307\u5bfc\\n\u70b9\u300e\u7ee7\u7eed\u300f\u6062\u590d\" else \"\u7ee7\u7eed\u6307\u5bfc\")\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "            OverlayAction.CLOSE -> {\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "                overlayClosed = true\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "                overlayPanel?.let { p -> runCatching { windowManager?.removeView(p) } }\r\n", "ts": 1790300025.2338839}
+{"type": "output", "data": "                overlayPanel = null\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                paused = true\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                releaseCapture()\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                setStatus(\"\u5df2\u5173\u95ed\uff08\u8bc6\u522b\u4e0e\u5f55\u5c4f\u5747\u5df2\u505c\u6b62\uff0c\u53ef\u5728\u8fde\u7ebf\u9875\u91cd\u65b0\u542f\u52a8\uff09\")\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                stopSelf()\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "            OverlayAction.CYCLE_CANDIDATE -> {\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                val n = maxOf(bookMoves?.size ?: 0, lastAnalysis?.lines?.size ?: 0)\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                if (n > 0) {\r\n                    selectedCandidate = (selectedCandidate + 1) % n\r\n                    postRender()\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.2343867}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "            OverlayAction.UNDO -> undoOneStep()\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "            OverlayAction.MANUAL -> toggleManualMode()\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "            OverlayAction.FLIP_TURN -> {\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                tracker.redGo = !tracker.redGo\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                resetSuggestionState()\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                val canonical = currentCanonical\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                if (canonical != null) {\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                    currentFen = AssistBoard.toFen(canonical, tracker.redGo)\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                postRender()\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                scheduleAnalysis()\r\n", "ts": 1790300025.2348907}
+{"type": "output", "data": "                setStatus(\"\u68cb\u5c40\u5df2\u66f4\u65b0\\n\u73b0${if (tracker.redGo == mySideIsRed()) \"\u8f6e\u5230\u6211\u65b9\u8d70\" else \"\u8f6e\u5230\u5bf9\u65b9\u8d70\"}\")\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "            OverlayAction.CYCLE_STRENGTH -> cycleStrength()\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "            OverlayAction.CYCLE_HASH -> cycleHash()\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "    private fun undoOneStep() {\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "        if (history.size <= 1) {\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "            setStatus(\"\u6ca1\u6709\u53ef\u6094\u7684\u5c40\u9762\uff08\u4f1a\u968f\u5bf9\u5f08\u81ea\u52a8\u79ef\u7d2f\uff09\")\r\n            return\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.235393}
+{"type": "output", "data": "        history.removeLast()\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        val prev = history.last()\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        tracker.restore(prev.result, prev.redGo)\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        currentCanonical = prev.result.canonical\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        currentPieces = flatten(prev.result.canonical)\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        currentOrientation = prev.result.orientation\r\n        currentFen = prev.fen\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        resetSuggestionState()\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        if (!manualMode) paused = true\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        scheduleAnalysis()\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "        setStatus(\"\u5df2\u6094\u68cb\u4e00\u6b65\\n\u70b9\u300e\u7ee7\u7eed\u300f\u6062\u590d\")\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2358932}
+{"type": "output", "data": "\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "    private fun toggleManualMode() {\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "        manualMode = !manualMode\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "        manualSelected = null\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "        if (manualMode) {\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            if (currentCanonical == null) {\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "                val start = AssistBoard.canonicalStart()\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "                currentCanonical = start\r\n                currentPieces = flatten(start)\r\n                currentOrientation = Orientation.STANDARD", "ts": 1790300025.236393}
+{"type": "output", "data": "\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "                currentFen = AssistBoard.toFen(start, tracker.redGo)\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            val canonical = currentCanonical\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            if (canonical != null && history.lastOrNull()?.fen != currentFen) {\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "                pushManualHistory(canonical, tracker.redGo)\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "            setStatus(\"\u624b\u52a8\u6a21\u5f0f\uff08\u518d\u70b9\u624b\u52a8\u9000\u51fa\uff09\\n\u70b9\u5b50\u9009\u4e2d\u2192\u70b9\u76ee\u6807\u683c=\u8d70\u5b50\\n\u518d\u70b9\u9009\u4e2d\u5b50=\u5220\u9664\\n\u300e\u66f4\u65b0\u68cb\u5c40\u300f\u7ea0\u6b63\u8f6e\u6b21\")\r\n", "ts": 1790300025.236393}
+{"type": "output", "data": "        } else {\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "            setStatus(\"\u5df2\u9000\u51fa\u624b\u52a8\u6a21\u5f0f\\n\u6062\u590d\u81ea\u52a8\u8bc6\u522b\")\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "    private fun onManualCellTap(x: Int, y: Int) {\r\n        if (!manualMode) return\r\n", "ts": 1790300025.2371523}
+{"type": "output", "data": "        val board = currentCanonical ?: return\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "        val sel = manualSelected\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "        if (sel == null) {\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "            if (board[y][x] != Piece.EMPTY) {\r\n                manualSelected = x to y\r\n                postRender()\r\n            }\r\n            return\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "        if (sel == x to y) {\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "            val p = board[y][x]\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "            manualSelected = null\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "            if (p == Piece.WSHUAI || p == Piece.BJIANG) {\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "                setStatus(\"\u624b\u52a8\u6a21\u5f0f\\n\u5e05/\u5c06\u4e0d\u53ef\u5220\u9664\")\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "                postRender()\r\n", "ts": 1790300025.2376556}
+{"type": "output", "data": "                return\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            board[y][x] = Piece.EMPTY\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            applyManualBoard(board, flipTurn = false)\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            return\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "        val moving = board[sel.second][sel.first]\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "        manualSelected = null\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "        if (moving == Piece.EMPTY) {\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            postRender()\r\n", "ts": 1790300025.2382224}
+{"type": "output", "data": "            return\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        }\r\n        board[sel.second][sel.first] = Piece.EMPTY\r\n        board[y][x] = moving\r\n        applyManualBoard(board, flipTurn = true)\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    private fun pushManualHistory(board: Array<IntArray>, redGo: Boolean) {\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        val result = RecognitionResult(\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "            AssistBoard.clone(board), AssistBoard.clone(board), currentOrientation,\r\n            emptyList(), 0, countPieces(board), 1.0)\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        history.addLast(HistoryEntry(result, redGo, AssistBoard.toFen(board, redGo)))\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        if (history.size > 60) history.removeFirst()\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    private fun countPieces(board: Array<IntArray>): Int =\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        board.sumOf { row -> row.count { it != Piece.EMPTY } }\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    private fun applyManualBoard(board: Array<IntArray>, flipTurn: Boolean) {\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        if (flipTurn) tracker.redGo = !tracker.redGo\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        currentCanonical = board\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        currentPieces = flatten(board)\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        currentFen = AssistBoard.toFen(board, tracker.redGo)\r\n        pushManualHistory(board, tracker.redGo)\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        resetSuggestionState()\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "        scheduleAnalysis()\r\n", "ts": 1790300025.238724}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2396808}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2401834}
+{"type": "output", "data": "    private fun cycleStrength() {\r\n        strengthIndex = (strengthIndex + 1) % strengthLevels.size\r\n        val (name, depth) = strengthLevels[strengthIndex]\r\n        config.searchDepth = depth\r\n        analysisEngine?.setSearchDepth(depth)\r\n        postRender()\r\n        setStatus(\"\u5f15\u64ce\u5f3a\u5ea6\uff1a$name\")\r\n    }\r\n\r\n    private fun strengthButtonText(): String =\r\n        \"\u6df1\u5ea6\" + strengthLevels[strengthIndex].second\r\n\r\n    private fun cycleHash() {\r\n        hashIndex = (hashIndex + 1) % hashLevels.size\r\n        val mb = hashLevels[hashIndex]\r\n        config.hashMb = mb\r\n        analysisEngine?.setHash(mb)\r\n        postRender()\r\n        setStatus(\"\u5f15\u64ce Hash\uff1a${mb}MB\")\r\n    }\r\n\r\n    private fun hashButtonText(): String =\r\n        \"Hash\" + hashLevels[hashIndex]\r\n", "ts": 1790300025.2406988}
+{"type": "output", "data": "\r\n    private fun mySideIsRed(): Boolean = currentOrientation == Orientation.STANDARD\r\n\r\n    private fun setStatus(text: String) {\r\n        lastStatusText = text\r\n", "ts": 1790300025.2406988}
+{"type": "output", "data": "        mainHandler.post {\r\n            renderOverlay(statusOverride = text)\r\n", "ts": 1790300025.2412043}
+{"type": "output", "data": "            runCatching {\r\n                val nm = getSystemService(NotificationManager::class.java)\r\n", "ts": 1790300025.2412043}
+{"type": "output", "data": "                nm.notify(NOTIF_ID, buildNotification(text))\r\n            }\r\n        }\r\n    }\r\n\r\n    @Volatile private var lastStatusText = \"\u672a\u542f\u52a8\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "\r\n    private fun postRender() {\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        mainHandler.post { renderOverlay() }\r\n    }\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "\r\n    private fun renderOverlay(statusOverride: String? = null) {\r\n        if (overlayClosed) return\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val panel = ensureOverlay() ?: return\r\n        val fen = currentFen\r\n        val myRed = mySideIsRed()\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val a = lastAnalysis\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val status = statusOverride ?: when {\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "            manualMode -> \"\u624b\u52a8\u6a21\u5f0f\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "            paused -> \"\u5df2\u505c\u6b62\u6307\u5bfc\\n\u4ecd\u89c2\u5bdf\u5c40\u9762\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "            engineErrorText != null -> \"\u5f15\u64ce\u5f02\u5e38\uff1a$engineErrorText\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "            engineReady -> \"\u8bc6\u522b\u4e2d\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "            else -> \"\u5f15\u64ce\u9884\u70ed\u4e2d\u2026\"\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val turnRed = tracker.redGo\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val myTurn = if (fen.isEmpty()) false else (turnRed == myRed)\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2417061}
+{"type": "output", "data": "        val lines = a?.lines ?: emptyList()\r\n", "ts": 1790300025.2424588}
+{"type": "output", "data": "        val line = if (lines.isNotEmpty()) lines[selectedCandidate.coerceIn(0, lines.size - 1)] else null\r\n\r\n", "ts": 1790300025.2424588}
+{"type": "output", "data": "        var headText = when {\r\n", "ts": 1790300025.2424588}
+{"type": "output", "data": "            fen.isEmpty() -> \"\"\r\n", "ts": 1790300025.2424588}
+{"type": "output", "data": "            else -> \"\u6211\u65b9${if (myRed) \"\u7ea2\u65b9\" else \"\u9ed1\u65b9\"}\\n${if (myTurn) \"\u8f6e\u5230\u6211\u65b9\u8d70\" else \"\u8f6e\u5230\u5bf9\u65b9\u8d70\"}\"\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "        }\r\n        var arrowFrom: Pair<Int, Int>? = null\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "        var arrowTo: Pair<Int, Int>? = null\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "        var suggestMature = false\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "        val recHealthy = manualMode || (yoloMissStreak == 0 && tracker.unstableStreak < 5)\r\n        val book = if (myTurn) bookMoves else null\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "        fun fromIsOurs(ucci: String): Boolean {\r\n", "ts": 1790300025.2510893}
+{"type": "output", "data": "            val arr = currentPieces ?: return false\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            if (ucci.length < 4) return false\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            val fx = ucci[0] - 'a'\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            val fy = 9 - (ucci[1] - '0')\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            if (fx !in 0..8 || fy !in 0..9) return false\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            val p = arr[fy * 9 + fx]\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            return p in 1..14 && Piece.isRed(p) == myRed\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "        when {\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "            myTurn && recHealthy && book != null && book.isNotEmpty() -> {\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                val idx = selectedCandidate.coerceIn(0, book.size - 1)\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                val bd = book[idx]\r\n                val ucci = bd.move\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                if (fromIsOurs(ucci)) {\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    suggestMature = true\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    val arrow = ucciToCells(ucci)\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    arrowFrom = arrow.first\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    arrowTo = arrow.second\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    val chs = describeSafe(fen, ucci)\r\n", "ts": 1790300025.2515926}
+{"type": "output", "data": "                    val tag = if (idx > 0) \"\u5f00\u5c40\u5e93\u5907\u9009${idx + 1} $chs \u2713\" else \"\u5f00\u5c40\u5e93 $chs \u2713\"\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    val total = bd.winRate + bd.drawNum + bd.loseNum\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    val wrTxt = if (total > 0) \"\u80dc\u7387\u7ea6 ${(bd.winRate * 100 / total).toInt()}%\" else \"\u5e93\u5185\u63a8\u8350\"\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    headText = \"$tag\\n$wrTxt\\n$headText\"\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                } else {\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    headText = \"\u8f6e\u6b21\u53ef\u80fd\u8bc6\u522b\u6709\u8bef\\n\u8d70\u4e00\u6b65\u540e\u81ea\u52a8\u7ea0\u6b63\\n$headText\"\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "            }\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "            myTurn && recHealthy && line != null -> {\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                val ucci = line.pv.firstOrNull() ?: a?.bestUcci\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                if (ucci != null && fromIsOurs(ucci)) {\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    suggestMature = searchSettled ||\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                            System.currentTimeMillis() - stableSince >= SUGGEST_STABLE_MS\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    val chs = describeSafe(fen, ucci)\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    val arrow = ucciToCells(ucci)\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    arrowFrom = arrow.first\r\n", "ts": 1790300025.252302}
+{"type": "output", "data": "                    arrowTo = arrow.second\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                    val tag = if (selectedCandidate > 0) \"\u5907\u9009${selectedCandidate + 1} $chs\" else \"\u5efa\u8bae $chs\"\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                    val suffix = if (suggestMature) \" \u2713\" else \"\uff08\u6682\u5b9a\uff09\"\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                    headText = \"$tag$suffix\\n${lineScoreText(line)} \u6df1\u5ea6${line.depth}\\n$headText\"\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                } else if (ucci != null) {\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                    headText = \"\u8f6e\u6b21\u53ef\u80fd\u8bc6\u522b\u6709\u8bef\\n\u8d70\u4e00\u6b65\u540e\u81ea\u52a8\u7ea0\u6b63\\n$headText\"\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "                }\r\n", "ts": 1790300025.252802}
+{"type": "output", "data": "            }\r\n            !myTurn && line != null && line.pv.size >= 2 -> {\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "                val oppU = line.pv[0]\r\n                val myU = line.pv[1]\r\n                if (fromIsOurs(myU)) {\r\n                    val oppDesc = describeSafe(fen, oppU)\r\n                    val myDesc = describeSafe(AssistBoard.applyUcci(fen, oppU), myU)\r\n                    headText = \"\u82e5\u5bf9\u65b9\u8d70$oppDesc\\n\u6211\u65b9\u5e94$myDesc\\n$headText\"\r\n                }\r\n            }\r\n            myTurn && engineReady && fen.isNotEmpty() -> {\r\n                headText = \"\u5f15\u64ce\u601d\u8003\u4e2d\u2026\\n$headText\"\r\n            }\r\n        }\r\n\r\n        panel.render(OverlayModel(\r\n            statusText = if (headText.isEmpty()) status else \"$status\\n$headText\",\r\n            pieces = currentPieces,\r\n            arrowFrom = arrowFrom,\r\n            arrowTo = arrowTo,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            flipped = currentOrientation == Orientation.FLIPPED,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            mySideIsRed = myRed,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            mature = suggestMature,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            paused = paused,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            strengthText = strengthButtonText(),\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            hashText = hashButtonText(),\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            manualMode = manualMode,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "            selectedCell = manualSelected,\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "        ))\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2538185}
+{"type": "output", "data": "    private fun lineScoreText(line: AnalysisLine): String {\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        val adv = line.scoreText()\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        return if (line.redScoreCp >= 0) \"\u7ea2\u65b9\u4f18\u52bf $adv\" else \"\u7ea2\u65b9\u52a3\u52bf $adv\"\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "    private fun ucciToCells(ucci: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        if (ucci.length < 4) return Pair(0 to 0, 0 to 0)\r\n        val fx = ucci[0] - 'a'\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        val fy = 9 - (ucci[1] - '0')\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        val tx = ucci[2] - 'a'\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        val ty = 9 - (ucci[3] - '0')\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        return Pair(fx to fy, tx to ty)\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "    override fun onDestroy() {\r\n        Log.i(TAG, \"service destroyed\")", "ts": 1790300025.254475}
+{"type": "output", "data": "\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        releaseCapture()\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        yoloDetector?.close()\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        yoloDetector = null\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        analysisEngine?.shutdown()\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        analysisEngine = null\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        overlayPanel?.let { p ->\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "            windowManager?.removeView(p)\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        }\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        overlayPanel = null\r\n", "ts": 1790300025.254475}
+{"type": "output", "data": "        frameThread.quitSafely()\r\n", "ts": 1790300025.255477}
+{"type": "output", "data": "        workerThread.quitSafely()\r\n", "ts": 1790300025.255477}
+{"type": "output", "data": "        super.onDestroy()\r\n", "ts": 1790300025.255477}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "\r\n    private fun releaseCapture() {\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        try { virtualDisplay?.release() } catch (e: Exception) { }\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        virtualDisplay = null\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        try { imageReader?.close() } catch (e: Exception) { }\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        imageReader = null\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        try { mediaProjection?.stop() } catch (e: Exception) { }\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        mediaProjection = null\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "        stopForeground(STOP_FOREGROUND_REMOVE)\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "    }\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "    private fun OverlayPanelView.dp(v: Int): Int =\r\n        (v * resources.displayMetrics.density).toInt()\r\n", "ts": 1790300025.2559953}
+{"type": "output", "data": "}\r\n", "ts": 1790300025.2559953}
+{"type": "end", "exit_code": 0, "ts": 1790300025.2746387}

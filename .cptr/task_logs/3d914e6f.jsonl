@@ -1,0 +1,3 @@
+{"type": "start", "command": "cd /d D:\\build\\chess-dike-main && git log --oneline -20", "pid": 30216, "ts": 1790300291.6791968}
+{"type": "output", "data": "fatal: not a git repository (or any of the parent directories): .git\n", "ts": 1790300291.7465255}
+{"type": "end", "exit_code": 128, "ts": 1790300291.752044}

@@ -1,0 +1,4 @@
+{"type": "start", "command": "powershell -Command \"$f='app/src/main/java/com/timez/chess/assist/PieceMatcher.kt'; (Get-Item $f).Length; $b=[IO.File]::ReadAllBytes($f); ($b[0..2] | ForEach-Object { '{0:X2}' -f $_ }) -join ' '\"", "pid": 13772, "ts": 1790299853.3733494}
+{"type": "output", "data": "7626\r\n", "ts": 1790299853.592039}
+{"type": "output", "data": "70 61 63\r\n", "ts": 1790299853.6049592}
+{"type": "end", "exit_code": 0, "ts": 1790299853.6222842}

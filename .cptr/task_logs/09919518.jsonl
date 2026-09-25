@@ -1,0 +1,30 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/YoloDetections.kt' -Encoding UTF8\"", "pid": 27560, "ts": 1790300148.220967}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": "\r\nimport com.timez.chess.gamelogic.Piece\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": "\r\n/**\r\n * YOLO \u68cb\u5b50\u68c0\u6d4b\u7684\u7eaf JVM \u6570\u636e\u6a21\u578b\u4e0e\u7c7b\u522b\u8868\u3002\r\n *\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": " * \u6a21\u578b\u4e3a YOLOv5\uff08640 \u8f93\u5165\uff09\uff0c\u8f93\u51fa [1,25200,20]\uff1a\u6bcf\u884c 4 \u4e2a\u6846\u53c2\u6570(\u4e2d\u5fc3 x/y\u3001\u5bbd\u9ad8\uff0c640 \u50cf\u7d20\u57df)\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": " * + 1 \u4e2a objectness + 15 \u4e2a\u7c7b\u522b\u5206\u3002\u7c7b\u522b\u8868\u4e0e VinXiangQi \u8bad\u7ec3\u5b9a\u4e49\u4e00\u81f4\uff1a\r\n * 14 \u79cd\u68cb\u5b50 + 1 \u4e2a\u6574\u4f53\u68cb\u76d8\u6846\uff08board\uff09\u3002\r\n */\r\nclass YoloDetection(\r\n    /** \u7c7b\u522b\u7d22\u5f15 0..14\uff08\u89c1 LABELS\uff09 */\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": "    val labelId: Int,\r\n", "ts": 1790300148.4048622}
+{"type": "output", "data": "    /** \u7f6e\u4fe1\u5ea6 0..1 */\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val score: Double,\r\n    /** \u6846\u4e2d\u5fc3\u4e0e\u5bbd\u9ad8\uff08\u539f\u59cb\u5e27\u50cf\u7d20\u57df\uff0c\u975e\u6a21\u578b\u8f93\u5165\u57df\uff09 */\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val cx: Double,\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val cy: Double,\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val w: Double,\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val h: Double,\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": ") {\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val isBoard: Boolean get() = labelId == LABEL_BOARD\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    /** \u5bf9\u5e94 Piece \u5e38\u91cf\uff1bboard \u7c7b\u522b\u8fd4\u56de -1 */\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    val piece: Int get() = PIECE_CODES[labelId]\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "    companion object {\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "        const val LABEL_BOARD = 14\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "        // labelId 0..13 \u4f9d\u6b21\u5bf9\u5e94\uff1a\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "        // b_ma b_xiang b_shi b_jiang b_che b_pao b_bing r_che r_ma r_shi r_jiang r_xiang r_pao r_bing\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "        val PIECE_CODES = intArrayOf(\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "            Piece.BMA, Piece.BXIANG, Piece.BSHI, Piece.BJIANG, Piece.BJU, Piece.BPAO, Piece.BZU,\r\n", "ts": 1790300148.4055076}
+{"type": "output", "data": "            Piece.WJU, Piece.WMA, Piece.WSHI, Piece.WSHUAI, Piece.WXIANG, Piece.WPAO, Piece.WBING, -1\r\n", "ts": 1790300148.406446}
+{"type": "output", "data": "        )\r\n", "ts": 1790300148.406446}
+{"type": "output", "data": "    }\r\n", "ts": 1790300148.406446}
+{"type": "output", "data": "}\r\n", "ts": 1790300148.406446}
+{"type": "end", "exit_code": 0, "ts": 1790300148.423123}

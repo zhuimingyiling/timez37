@@ -1,0 +1,18 @@
+{"type": "start", "command": "powershell -Command \"Get-ChildItem app/src/test/java/com/xqdk/chess -Recurse -File | ForEach-Object { Write-Host ('### ' + $_.Name + ' [' + $_.Length + ']') }\"", "pid": 16028, "ts": 1790260423.5426583}
+{"type": "output", "data": "### AssistCoreTest.kt [10869]", "ts": 1790260423.7447908}
+{"type": "output", "data": "\n", "ts": 1790260423.7447908}
+{"type": "output", "data": "### AssistLaunchRobolectricTest.kt [2220]", "ts": 1790260423.7454665}
+{"type": "output", "data": "\n", "ts": 1790260423.7454665}
+{"type": "output", "data": "### DetectionBoardMapperTest.kt [6628]", "ts": 1790260423.7459686}
+{"type": "output", "data": "\n", "ts": 1790260423.7459686}
+{"type": "output", "data": "### OverlayChessViewRenderTest.kt [4982]", "ts": 1790260423.7464716}
+{"type": "output", "data": "\n", "ts": 1790260423.7464716}
+{"type": "output", "data": "### YoloPipelineTest.kt [15327]", "ts": 1790260423.7469707}
+{"type": "output", "data": "\n", "ts": 1790260423.7469707}
+{"type": "output", "data": "### BoardTest.java [1249]", "ts": 1790260423.74823}
+{"type": "output", "data": "\n", "ts": 1790260423.74823}
+{"type": "output", "data": "### MoveTest.java [3786]", "ts": 1790260423.748869}
+{"type": "output", "data": "\n", "ts": 1790260423.748869}
+{"type": "output", "data": "### PieceTest.java [1533]", "ts": 1790260423.748869}
+{"type": "output", "data": "\n", "ts": 1790260423.7494276}
+{"type": "end", "exit_code": 0, "ts": 1790260423.764892}

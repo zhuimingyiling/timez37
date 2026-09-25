@@ -1,0 +1,4 @@
+{"type": "start", "command": "powershell -Command \"(Get-Item 'docs/engineer-handoff.md').Length; (Get-Content 'docs/engineer-handoff.md' -Encoding UTF8 | Measure-Object -Line).Lines\"", "pid": 2284, "ts": 1790300662.5981522}
+{"type": "output", "data": "57309\r\n", "ts": 1790300662.9435973}
+{"type": "output", "data": "554\r\n", "ts": 1790300663.0416198}
+{"type": "end", "exit_code": 0, "ts": 1790300663.0724099}

@@ -1,0 +1,10 @@
+{"type": "start", "command": "powershell -Command \"Get-ChildItem app/src/main/assets/templates -Recurse -Directory | Select-Object FullName\"", "pid": 22880, "ts": 1790257501.447135}
+{"type": "output", "data": "\r\n", "ts": 1790257501.670815}
+{"type": "output", "data": "FullName                                                              \r\n", "ts": 1790257501.672814}
+{"type": "output", "data": "--------                                                              \r\n", "ts": 1790257501.672814}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\green          \r\nD:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\templates      \r\n", "ts": 1790257501.672814}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\white          \r\nD:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\wood           \r\nD:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\templates\\green\r\n", "ts": 1790257501.672814}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\templates\\white\r\n", "ts": 1790257501.673333}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\app\\src\\main\\assets\\templates\\templates\\wood \r\n\r\n", "ts": 1790257501.673333}
+{"type": "output", "data": "\r\n", "ts": 1790257501.673333}
+{"type": "end", "exit_code": 0, "ts": 1790257501.6893218}

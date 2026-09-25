@@ -1,0 +1,123 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/DetectionBoardMapper.kt' -Encoding UTF8\"", "pid": 18472, "ts": 1790299890.443979}
+{"type": "output", "data": "package com.timez.chess.assist\r\n\r\nimport com.timez.chess.gamelogic.Piece\r\n", "ts": 1790299890.6295626}
+{"type": "output", "data": "import kotlin.math.roundToInt\r\nimport kotlin.math.sqrt\r\n", "ts": 1790299890.6295626}
+{"type": "output", "data": "\r\n/**\r\n * YOLO \u68c0\u6d4b\u7ed3\u679c -> 9\u00d710 \u68cb\u76d8\u6620\u5c04\uff08\u7eaf JVM\uff09\u3002\r\n *\r\n", "ts": 1790299890.6295626}
+{"type": "output", "data": " * \u79fb\u690d\u81ea VinXiangQi \u7684 GetBoardFromPrediction \u5e76\u52a0\u5f3a\uff1a\r\n", "ts": 1790299890.6295626}
+{"type": "output", "data": " * 1. \u4f18\u5148\u7528\u6a21\u578b\u7684 board \u6846\u505a\u7f51\u683c\u951a\u70b9\uff08\u5bbd/8\u3001\u9ad8/9 \u5373\u683c\u8ddd\uff09\uff1b\r\n * 2. board \u7f3a\u5931\u6216\u5f62\u72b6\u5f02\u5e38\u65f6\uff0c\u7528\u68cb\u5b50\u4e2d\u5fc3\u70b9\u5305\u56f4\u76d2\u515c\u5e95\uff08\u9700\u6709\u8db3\u591f\u68cb\u5b50\u4e14\u95f4\u8ddd\u4e00\u81f4\uff09\uff1b\r\n * 3. \u68cb\u5b50\u4e2d\u5fc3 round \u5230\u6700\u8fd1\u4ea4\u70b9\uff0c\u8d8a\u754c\u4e22\u5f03\uff0c\u540c\u683c\u51b2\u7a81\u4fdd\u7559\u9ad8\u5206\u8005\uff1b\r\n * 4. \u671d\u5411\u7531\u4e24\u4e2a\u738b\u7684\u4f4d\u7f6e\u63a8\u65ad\uff08\u5e05\u5728\u4e0b=STANDARD\uff09\u3002\r\n */\r\nobject DetectionBoardMapper {\r\n", "ts": 1790299890.6295626}
+{"type": "output", "data": "\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "    class MappedBoard(\r\n        /** \u5c4f\u5e55\u5e03\u5c40 [gy][gx]\uff08gy=0 \u4e3a\u5c4f\u5e55\u9876\u90e8\uff09\uff0c\u5143\u7d20\u4e3a Piece \u5e38\u91cf\u6216 EMPTY */", "ts": 1790299890.630341}
+{"type": "output", "data": "\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val screenRaw: Array<IntArray>,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        /** canonical \u5e03\u5c40\uff08\u7ea2\u6052\u5728 y=9\uff09 */\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val canonical: Array<IntArray>,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val orientation: Orientation,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        /** \u7531\u68cb\u76d8\u6846\u6362\u7b97\u7684\u5f52\u4e00\u5316\u7f51\u683c\uff08\u4f9b\u60ac\u6d6e\u7a97\u906e\u6321\u5224\u65ad\u7b49\u590d\u7528\uff09 */\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val grid: BoardGrid?,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val pieceCount: Int,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val avgScore: Double,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        /** \u8bc6\u522b\u65e5\u5fd7\uff1a\u88ab\u4e22\u5f03\u7684\u8d8a\u754c/\u91cd\u590d\u68cb\u5b50\u6570 */\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "        val dropped: Int,\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "    )\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "\r\n", "ts": 1790299890.630341}
+{"type": "output", "data": "    /**\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "     * \u5355\u5e27\u6700\u5c11\"\u68cb\u5b50\u68c0\u6d4b\u6570\"\uff1a\u4f4e\u4e8e\u8be5\u503c\u4e0d\u503c\u5f97\u6620\u5c04\uff08\u6574\u5c4f\u65e0\u68cb\u76d8\uff09\u3002\u6b8b\u5c40\u53ef\u4f4e\u81f3 3 \u5b50\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "     * \uff08\u5e05\u4ed5 vs \u5c06\uff09\uff0c\u6545\u4e0d\u80fd\u6cbf\u7528 10\u2014\u2014\u90a3\u4f1a\u628a\u7a00\u758f\u6b8b\u5c40\u6c38\u8fdc\u62d2\u4e4b\u95e8\u5916\uff1b\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "     * \u7ed3\u6784\u5408\u6cd5\u6027\u7531 AssistBoard.validate\u3001\u77ac\u65f6\u574f\u5e27\u7531 BoardTracker \u7684\u591a\u5e27\u786e\u8ba4\u628a\u5173\u3002\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "     */\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "    fun map(dets: List<YoloDetection>, frameW: Int, frameH: Int, minPieces: Int = 3): MappedBoard? {\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        val pieces = dets.filter { !it.isBoard }\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        if (pieces.size < minPieces) return null\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        val boardDet = dets.filter { it.isBoard }.maxByOrNull { it.score }\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        val avgW = pieces.map { it.w }.average()\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        val avgH = pieces.map { it.h }.average()\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "\r\n", "ts": 1790299890.630844}
+{"type": "output", "data": "        var bx0 = 0.0; var by0 = 0.0; var bx1 = 0.0; var by1 = 0.0\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "        var anchored = false\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "        if (boardDet != null) {\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "            val x0 = boardDet.cx - boardDet.w / 2\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "            val y0 = boardDet.cy - boardDet.h / 2\r\n            val x1 = boardDet.cx + boardDet.w / 2\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "            val y1 = boardDet.cy + boardDet.h / 2\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "            val ratio = (x1 - x0) / (y1 - y0)\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "            if (ratio in 0.7..1.3 && (x1 - x0) >= avgW * 7 && (y1 - y0) >= avgH * 8) {\r\n", "ts": 1790299890.6313467}
+{"type": "output", "data": "                bx0 = x0; by0 = y0; bx1 = x1; by1 = y1\r\n                anchored = true\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            }\r\n        }\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "        if (!anchored) {\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            // \u515c\u5e95\uff1a\u68cb\u5b50\u4e2d\u5fc3\u5305\u56f4\u76d2\uff08\u81f3\u5c11\u9700\u8981 20 \u5b50\u624d\u53ef\u4fe1\uff09\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            if (pieces.size < 20) return null\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            val minX = pieces.minOf { it.cx }; val maxX = pieces.maxOf { it.cx }\r\n            val minY = pieces.minOf { it.cy }; val maxY = pieces.maxOf { it.cy }\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            val w = maxX - minX; val h = maxY - minY\r\n            if (w <= 0 || h <= 0) return null\r\n            if (w / h !in 0.7..1.3) return null\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            // \u6700\u5c0f\u68cb\u5b50\u95f4\u8ddd\u5e94\u4e0e\u5305\u56f4\u76d2\u8de8\u5ea6\u76f8\u5bb9\uff08\u8fd1\u4f3c 8 \u5217 9 \u884c\u7684\u7b49\u8ddd\u7f51\u683c\uff09\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            var minDist = Double.MAX_VALUE\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "            for (i in pieces.indices) for (j in i + 1 until pieces.size) {\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "                val dx = pieces[i].cx - pieces[j].cx\r\n", "ts": 1790299890.6318493}
+{"type": "output", "data": "                val dy = pieces[i].cy - pieces[j].cy\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "                val d = sqrt(dx * dx + dy * dy)\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "                if (d < minDist) minDist = d\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "            }\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "            if (h < minDist * 8.0 || w < minDist * 7.0) return null\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "            bx0 = minX; by0 = minY; bx1 = maxX; by1 = maxY\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "\r\n        val gridW = (bx1 - bx0) / 8.0\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "        val gridH = (by1 - by0) / 9.0\r\n", "ts": 1790299890.632352}
+{"type": "output", "data": "        if (gridW <= 0 || gridH <= 0) return null\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "        val cells = Array(AssistBoard.H) { IntArray(AssistBoard.W) }\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "        val cellScore = Array(AssistBoard.H) { DoubleArray(AssistBoard.W) }\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "        var dropped = 0\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "        var scoreSum = 0.0\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "        for (p in pieces) {\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            val col = ((p.cx - bx0) / gridW).roundToInt()\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            val row = ((p.cy - by0) / gridH).roundToInt()\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            if (col !in 0 until AssistBoard.W || row !in 0 until AssistBoard.H) { dropped++; continue }\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            if (cells[row][col] != Piece.EMPTY && cellScore[row][col] >= p.score) { dropped++; continue }\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            if (cells[row][col] != Piece.EMPTY) scoreSum -= cellScore[row][col]\r\n", "ts": 1790299890.6328547}
+{"type": "output", "data": "            cells[row][col] = p.piece\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "            cellScore[row][col] = p.score\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "            scoreSum += p.score\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        val pieceCount = cells.sumOf { row -> row.count { it != Piece.EMPTY } }\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        val orientation = detectOrientation(cells) ?: Orientation.STANDARD\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        val canonical = toCanonical(cells, orientation)\r\n\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        val grid = try {\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "            BoardGrid.fromPxCorners(\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "                bx0.coerceIn(0.0, frameW.toDouble()), by0.coerceIn(0.0, frameH.toDouble()),\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "                bx1.coerceIn(0.0, frameW.toDouble()), by1.coerceIn(0.0, frameH.toDouble()),\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "                frameW, frameH)\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        } catch (e: Exception) { null }\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "\r\n", "ts": 1790299890.633357}
+{"type": "output", "data": "        return MappedBoard(cells, canonical, orientation, grid, pieceCount,\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "            if (pieceCount > 0) scoreSum / pieceCount else 0.0, dropped)\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "    /** \u53cc\u738b\u4f4d\u7f6e\u5224\u5b9a\u5c4f\u5e55\u671d\u5411\uff08\u5e05\u5728\u4e0b=STANDARD\uff0c\u72ec\u7acb\u5b9e\u73b0\u4fdd\u6301\u7eaf JVM \u65e0\u8026\u5408\uff09 */\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "    fun detectOrientation(raw: Array<IntArray>): Orientation? {\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "        var redRow = -1\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "        var blackRow = -1\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "        for (gy in 0 until AssistBoard.H) for (gx in 0 until AssistBoard.W) {\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "            when (raw[gy][gx]) {\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "                Piece.WSHUAI -> redRow = gy\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "                Piece.BJIANG -> blackRow = gy\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "            }\r\n", "ts": 1790299890.6338599}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "        if (redRow >= 0 && redRow > 4) return Orientation.STANDARD\r\n        if (blackRow >= 0 && blackRow > 4) return Orientation.FLIPPED", "ts": 1790299890.6343627}
+{"type": "output", "data": "\r\n        if (redRow >= 0 && redRow <= 4) return Orientation.FLIPPED\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "        if (blackRow >= 0 && blackRow <= 4) return Orientation.STANDARD\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "        return null\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "    /** \u5c4f\u5e55 raw \u5e03\u5c40 -> \u5185\u90e8 canonical\uff08\u7ea2\u6052\u5728 y=9\uff09 */\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "    fun toCanonical(raw: Array<IntArray>, orientation: Orientation): Array<IntArray> {\r\n", "ts": 1790299890.6343627}
+{"type": "output", "data": "        val out = Array(AssistBoard.H) { IntArray(AssistBoard.W) }\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "        for (gy in 0 until AssistBoard.H) for (gx in 0 until AssistBoard.W) {\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "            val p = raw[gy][gx]\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "            if (p == Piece.EMPTY) continue\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "            when (orientation) {\r\n                Orientation.STANDARD -> out[gy][gx] = p\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "                Orientation.FLIPPED -> out[AssistBoard.H - 1 - gy][AssistBoard.W - 1 - gx] = p\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "            }\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "        return out\r\n", "ts": 1790299890.6348658}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.6353676}
+{"type": "output", "data": "}\r\n", "ts": 1790299890.6353676}
+{"type": "end", "exit_code": 0, "ts": 1790299890.6534576}

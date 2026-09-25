@@ -1,0 +1,135 @@
+{"type": "start", "command": "powershell -Command \"Get-ChildItem -Recurse filepicker/src, tinypinyin/src | Select-Object FullName, Length | Format-Table -AutoSize\"", "pid": 23548, "ts": 1790257306.8517773}
+{"type": "output", "data": "\r\n", "ts": 1790257307.0589435}
+{"type": "output", "data": "FullName                                                                                                     Length\r\n", "ts": 1790257307.0941389}
+{"type": "output", "data": "--------                                                                                                     ------\r\nD:\\build\\chess-dike-main\\filepicker\\src\\androidTest                                                                \r\n", "ts": 1790257307.0941389}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main                                                                       \r\nD:\\build\\chess-dike-main\\filepicker\\src\\test                                                                       \r\n", "ts": 1790257307.0941389}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\androidTest\\java                                                           \r\n", "ts": 1790257307.0941389}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\androidTest\\java\\me                                                        \r\n", "ts": 1790257307.0941389}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\androidTest\\java\\me\\rosuh                                                  \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\androidTest\\java\\me\\rosuh\\filepicker                                       \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\androidTest\\java\\me\\rosuh\\filepicker\\ExampleInstrumentedTest.java    585   \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java                                                                  \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res                                                                   \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\AndroidManifest.xml                                             407   \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me                                                               \r\n", "ts": 1790257307.094946}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh                                                         \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker                                              \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\adapter                                      \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\bean                                         \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config                                       \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\engine                                       \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype                                     \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\utils                                        \r\n", "ts": 1790257307.095446}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\widget                                       \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\FilePickerActivity.kt                  24178 \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\adapter\\BaseAdapter.kt                 335   \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\adapter\\FileListAdapter.kt             11607 \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\adapter\\FileNavAdapter.kt              2072  \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\adapter\\RecyclerViewListener.kt        3997  \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\bean\\FileBean.kt                       153   \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\bean\\FileItemBeanImpl.kt               806   \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\bean\\FileNavBeanImpl.kt                319   \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\AbstractFileDetector.kt         1328  \r\n", "ts": 1790257307.0960805}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\AbstractFileFilter.kt           563   \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\AbstractFileType.kt             572   \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\DefaultFileDetector.kt          1577  \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\FileItemOnClickListener.kt      658   \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\FilePickerConfig.kt             14136 \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\FilePickerManager.kt            2025  \r\n", "ts": 1790257307.0969286}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\ILog.kt                         295   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\ItemClickListener.kt            627   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\config\\SimpleItemClickListener.kt      467   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\engine\\GlideEngine.kt                  1105  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\engine\\ImageEngine.kt                  979   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\engine\\ImageLoadController.kt          2934  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\engine\\PicassoEngine.kt                788   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\AudioFileType.kt              1046  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\CompressedFileType.kt         1041  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\DataBaseFileType.kt           1009  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\DataFileType.kt               1094  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\ExecutableFileType.kt         1032  \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\FileType.kt                   361   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\FontFileType.kt               983   \r\n", "ts": 1790257307.0974312}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\PageLayoutFileType.kt         988   \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\RasterImageFileType.kt        1055  \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\TextFileType.kt               1034  \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\VideoFileType.kt              1101  \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\WebFileType.kt                1071  \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\filetype\\XQFFileType.kt                978   \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\utils\\DefaultLogger.kt                 630   \r\n", "ts": 1790257307.0983818}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\utils\\FileListAdapterListener.kt       681   \r\n", "ts": 1790257307.098882}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\utils\\FileUtils.kt                     7431  \r\n", "ts": 1790257307.098882}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\utils\\ScreenUtils.kt                   280   \r\n", "ts": 1790257307.098882}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\widget\\PosLinearLayoutManager.kt       1457  \r\n", "ts": 1790257307.098882}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\java\\me\\rosuh\\filepicker\\widget\\RecyclerViewFilePicker.kt       2541  \r\n", "ts": 1790257307.098882}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\anim                                                              \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable                                                          \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout                                                            \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values                                                            \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-v21                                                        \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh                                                         \r\n", "ts": 1790257307.0993848}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rCN                                                     \r\n", "ts": 1790257307.099887}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rHK                                                     \r\n", "ts": 1790257307.099887}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rTW                                                     \r\n", "ts": 1790257307.099887}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\anim\\item_slide_down_anim_file_picker.xml                   729   \r\n", "ts": 1790257307.099887}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\anim\\layout_item_anim_file_picker.xml                       240   \r\n", "ts": 1790257307.099887}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\application_xiangqi_xqf.png                        327   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\bg_btn_focus_file_picker_crane.xml                 369   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\bg_btn_focus_file_picker_rail.xml                  369   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\bg_btn_focus_file_picker_reply.xml                 370   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\bg_btn_focus_file_picker_shrine.xml                372   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\btn_selector_file_picker_crane.xml                 411   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\btn_selector_file_picker_rail.xml                  393   \r\n", "ts": 1790257307.1003935}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\btn_selector_file_picker_reply.xml                 395   \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\btn_selector_file_picker_shrine.xml                397   \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\btn_style_normal_file_picker.xml                   361   \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_arrow_right_file_picker.xml                     590   \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_back_file_picker.xml                            481   \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_bt_file_picker.xml                              1407  \r\n", "ts": 1790257307.1008945}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_compressed_file_picker.xml                      583   \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_empty_file_list_file_picker.xml                 1190  \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_excel_file_picker.xml                           639   \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_exec_file_picker.xml                            2850  \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_folder_file_picker.xml                          400   \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_html_file_picker.xml                            1323  \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_image_file_picker.xml                           694   \r\nD:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_music_file_picker.xml                           953   \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_pdf_file_picker.xml                             1382  \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_txt_file_picker.xml                             556   \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_unknown_file_picker.xml                         3909  \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_video_file_picker.xml                           942   \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\ic_word_file_picker.xml                            595   \r\n", "ts": 1790257307.101521}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\drawable\\rec_loading_file_picker.xml                        281   \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout\\empty_file_list_file_picker.xml                      1143  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout\\item_list_file_picker.xml                            3299  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout\\item_nav_file_picker.xml                             1700  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout\\item_single_choise_list_file_picker.xml              2192  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\layout\\main_activity_for_file_picker.xml                    4593  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values\\colors.xml                                           3610  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values\\strings.xml                                          791   \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values\\styles.xml                                           3241  \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values\\style_theme_attrs.xml                                117   \r\n", "ts": 1790257307.1020236}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-v21\\styles.xml                                       3234  \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh\\strings.xml                                       832   \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rCN\\strings.xml                                   826   \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rHK\\strings.xml                                   826   \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\main\\res\\values-zh-rTW\\strings.xml                                   826   \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\test\\java                                                                  \r\n", "ts": 1790257307.1027026}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\test\\java\\me                                                               \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\test\\java\\me\\rosuh                                                         \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\test\\java\\me\\rosuh\\filepicker                                              \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\filepicker\\src\\test\\java\\me\\rosuh\\filepicker\\ExampleUnitTest.java                   381   \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main                                                                       \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java                                                                  \r\n", "ts": 1790257307.1032264}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com                                                              \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github                                                       \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg                                                \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper                                   \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\Engine.java                 4066  \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\ForwardLongestSelector.java 1149  \r\n", "ts": 1790257307.103727}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\Pinyin.java                 6846  \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinCode1.java            41185 \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinCode2.java            41356 \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinCode3.java            41160 \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinData.java             3975  \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinDict.java             652   \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinMapDict.java          722   \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\PinyinRules.java            798   \r\n", "ts": 1790257307.1042297}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\SegmentationSelector.java   968   \r\n", "ts": 1790257307.1047325}
+{"type": "output", "data": "D:\\build\\chess-dike-main\\tinypinyin\\src\\main\\java\\com\\github\\promeg\\pinyinhelper\\Utils.java                  884   \r\n", "ts": 1790257307.1047325}
+{"type": "output", "data": "\r\n", "ts": 1790257307.1047325}
+{"type": "output", "data": "\r\n", "ts": 1790257307.1047325}
+{"type": "end", "exit_code": 0, "ts": 1790257307.1196427}

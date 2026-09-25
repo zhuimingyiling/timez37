@@ -1,0 +1,184 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/ScreenAssistService.kt' -Encoding UTF8 | Select-Object -Skip 680 -First 220\"", "pid": 26264, "ts": 1790302937.3923979}
+{"type": "output", "data": "        } else {\r\n            setStatus(\"\u5df2\u9000\u51fa\u624b\u52a8\u6a21\u5f0f\\n\u6062\u590d\u81ea\u52a8\u8bc6\u522b\")\r\n", "ts": 1790302937.8743508}
+{"type": "output", "data": "        }\r\n        postRender()\r\n", "ts": 1790302937.874959}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790302937.874959}
+{"type": "output", "data": "    private fun onManualCellTap(x: Int, y: Int) {\r\n        if (!manualMode) return", "ts": 1790302937.874959}
+{"type": "output", "data": "\r\n        val board = currentCanonical ?: return\r\n        val sel = manualSelected\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "        if (sel == null) {\r\n            if (board[y][x] != Piece.EMPTY) {\r\n                manualSelected = x to y\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "                postRender()\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "            }\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "            return\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "        }\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "        if (sel == x to y) {\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "            val p = board[y][x]\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "            manualSelected = null\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "            if (p == Piece.WSHUAI || p == Piece.BJIANG) {\r\n", "ts": 1790302937.8754623}
+{"type": "output", "data": "                setStatus(\"\u624b\u52a8\u6a21\u5f0f\\n\u5e05/\u5c06\u4e0d\u53ef\u5220\u9664\")\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "                postRender()\r\n                return\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "            }\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "            board[y][x] = Piece.EMPTY\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "            applyManualBoard(board, flipTurn = false)\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "            return\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "        }\r\n        val moving = board[sel.second][sel.first]\r\n        manualSelected = null\r\n        if (moving == Piece.EMPTY) {\r\n            postRender()\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "            return\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "        }\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "        board[sel.second][sel.first] = Piece.EMPTY\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "        board[y][x] = moving\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "        applyManualBoard(board, flipTurn = true)\r\n", "ts": 1790302937.8761783}
+{"type": "output", "data": "    }\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "    private fun pushManualHistory(board: Array<IntArray>, redGo: Boolean) {\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "        val result = RecognitionResult(\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "            AssistBoard.clone(board), AssistBoard.clone(board), currentOrientation,\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "            emptyList(), 0, countPieces(board), 1.0)\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "        history.addLast(HistoryEntry(result, redGo, AssistBoard.toFen(board, redGo)))\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "        if (history.size > 60) history.removeFirst()\r\n    }", "ts": 1790302937.8769898}
+{"type": "output", "data": "\r\n\r\n    private fun countPieces(board: Array<IntArray>): Int =\r\n        board.sumOf { row -> row.count { it != Piece.EMPTY } }\r\n", "ts": 1790302937.8769898}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "    private fun applyManualBoard(board: Array<IntArray>, flipTurn: Boolean) {\r\n        if (flipTurn) tracker.redGo = !tracker.redGo\r\n        currentCanonical = board\r\n        currentPieces = flatten(board)\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        currentFen = AssistBoard.toFen(board, tracker.redGo)\r\n        pushManualHistory(board, tracker.redGo)", "ts": 1790302937.8774903}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        resetSuggestionState()\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        scheduleAnalysis()\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "    }\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "    private fun cycleStrength() {\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        strengthIndex = (strengthIndex + 1) % strengthLevels.size\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        val (name, depth) = strengthLevels[strengthIndex]\r\n", "ts": 1790302937.8774903}
+{"type": "output", "data": "        config.searchDepth = depth\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        analysisEngine?.setSearchDepth(depth)\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        setStatus(\"\u5f15\u64ce\u5f3a\u5ea6\uff1a$name\")\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "    private fun strengthButtonText(): String =\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        \"\u6df1\u5ea6\" + strengthLevels[strengthIndex].second\r\n\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "    private fun cycleHash() {\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        hashIndex = (hashIndex + 1) % hashLevels.size\r\n", "ts": 1790302937.8780274}
+{"type": "output", "data": "        val mb = hashLevels[hashIndex]\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "        config.hashMb = mb\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "        analysisEngine?.setHash(mb)\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "        postRender()\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "        setStatus(\"\u5f15\u64ce Hash\uff1a${mb}MB\")\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "    }\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "    private fun hashButtonText(): String =\r\n        \"Hash\" + hashLevels[hashIndex]\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "    private fun mySideIsRed(): Boolean = currentOrientation == Orientation.STANDARD\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8785274}
+{"type": "output", "data": "    private fun setStatus(text: String) {\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "        lastStatusText = text\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "        mainHandler.post {\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "            renderOverlay(statusOverride = text)\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "            runCatching {\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "                val nm = getSystemService(NotificationManager::class.java)\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "                nm.notify(NOTIF_ID, buildNotification(text))\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "            }\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "        }\r\n    }\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "    @Volatile private var lastStatusText = \"\u672a\u542f\u52a8\"\r\n", "ts": 1790302937.8790877}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "    private fun postRender() {\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        mainHandler.post { renderOverlay() }\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "    }\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "    private fun renderOverlay(statusOverride: String? = null) {\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        if (overlayClosed) return\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        val panel = ensureOverlay() ?: return\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        val fen = currentFen\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        val myRed = mySideIsRed()\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        val a = lastAnalysis\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "        val status = statusOverride ?: when {\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "            manualMode -> \"\u624b\u52a8\u6a21\u5f0f\"\r\n", "ts": 1790302937.8795884}
+{"type": "output", "data": "            paused -> \"\u5df2\u505c\u6b62\u6307\u5bfc\\n\u4ecd\u89c2\u5bdf\u5c40\u9762\"\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "            engineErrorText != null -> \"\u5f15\u64ce\u5f02\u5e38\uff1a$engineErrorText\"\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "            engineReady -> \"\u8bc6\u522b\u4e2d\"\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "            else -> \"\u5f15\u64ce\u9884\u70ed\u4e2d\u2026\"\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        }\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val turnRed = tracker.redGo\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val myTurn = if (fen.isEmpty()) false else (turnRed == myRed)\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val lines = a?.lines ?: emptyList()\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val line = if (lines.isNotEmpty()) lines[selectedCandidate.coerceIn(0, lines.size - 1)] else null\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        var headText = when {\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "            fen.isEmpty() -> \"\"\r\n            else -> \"\u6211\u65b9${if (myRed) \"\u7ea2\u65b9\" else \"\u9ed1\u65b9\"}\\n${if (myTurn) \"\u8f6e\u5230\u6211\u65b9\u8d70\" else \"\u8f6e\u5230\u5bf9\u65b9\u8d70\"}\"\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        }\r\n        var arrowFrom: Pair<Int, Int>? = null\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        var arrowTo: Pair<Int, Int>? = null\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        var suggestMature = false\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val recHealthy = manualMode || (yoloMissStreak == 0 && tracker.unstableStreak < 5)\r\n", "ts": 1790302937.880091}
+{"type": "output", "data": "        val book = if (myTurn) bookMoves else null\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "        fun fromIsOurs(ucci: String): Boolean {\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            val arr = currentPieces ?: return false\r\n            if (ucci.length < 4) return false\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            val fx = ucci[0] - 'a'\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            val fy = 9 - (ucci[1] - '0')\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            if (fx !in 0..8 || fy !in 0..9) return false\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            val p = arr[fy * 9 + fx]\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            return p in 1..14 && Piece.isRed(p) == myRed\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "        }\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "        when {\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "            myTurn && recHealthy && book != null && book.isNotEmpty() -> {\r\n", "ts": 1790302937.880698}
+{"type": "output", "data": "                val idx = selectedCandidate.coerceIn(0, book.size - 1)\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                val bd = book[idx]\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                val ucci = bd.move\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                if (fromIsOurs(ucci)) {\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    suggestMature = true\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    val arrow = ucciToCells(ucci)\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    arrowFrom = arrow.first\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    arrowTo = arrow.second\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    val chs = describeSafe(fen, ucci)\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    val tag = if (idx > 0) \"\u5f00\u5c40\u5e93\u5907\u9009${idx + 1} $chs \u2713\" else \"\u5f00\u5c40\u5e93 $chs \u2713\"\r\n", "ts": 1790302937.8811982}
+{"type": "output", "data": "                    val total = bd.winRate + bd.drawNum + bd.loseNum\r\n                    val wrTxt = if (total > 0) \"\u80dc\u7387\u7ea6 ${(bd.winRate * 100 / total).toInt()}%\" else \"\u5e93\u5185\u63a8\u8350\"\r\n                    headText = \"$tag\\n$wrTxt\\n$headText\"\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                } else {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    headText = \"\u8f6e\u6b21\u53ef\u80fd\u8bc6\u522b\u6709\u8bef\\n\u8d70\u4e00\u6b65\u540e\u81ea\u52a8\u7ea0\u6b63\\n$headText\"\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                }\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "            }\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "            myTurn && recHealthy && line != null -> {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                val ucci = line.pv.firstOrNull() ?: a?.bestUcci\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                if (ucci != null && fromIsOurs(ucci)) {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    suggestMature = searchSettled ||\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                            System.currentTimeMillis() - stableSince >= SUGGEST_STABLE_MS\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val chs = describeSafe(fen, ucci)\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val arrow = ucciToCells(ucci)\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    arrowFrom = arrow.first\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    arrowTo = arrow.second\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val tag = if (selectedCandidate > 0) \"\u5907\u9009${selectedCandidate + 1} $chs\" else \"\u5efa\u8bae $chs\"\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val suffix = if (suggestMature) \" \u2713\" else \"\uff08\u6682\u5b9a\uff09\"\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    headText = \"$tag$suffix\\n${lineScoreText(line)} \u6df1\u5ea6${line.depth}\\n$headText\"\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                } else if (ucci != null) {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    headText = \"\u8f6e\u6b21\u53ef\u80fd\u8bc6\u522b\u6709\u8bef\\n\u8d70\u4e00\u6b65\u540e\u81ea\u52a8\u7ea0\u6b63\\n$headText\"\r\n                }", "ts": 1790302937.8816981}
+{"type": "output", "data": "\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "            }\r\n            !myTurn && line != null && line.pv.size >= 2 -> {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                val oppU = line.pv[0]\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                val myU = line.pv[1]\r\n                if (fromIsOurs(myU)) {\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val oppDesc = describeSafe(fen, oppU)\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    val myDesc = describeSafe(AssistBoard.applyUcci(fen, oppU), myU)\r\n", "ts": 1790302937.8816981}
+{"type": "output", "data": "                    headText = \"\u82e5\u5bf9\u65b9\u8d70$oppDesc\\n\u6211\u65b9\u5e94$myDesc\\n$headText\"\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "                }\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "            }\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "            myTurn && engineReady && fen.isNotEmpty() -> {\r\n                headText = \"\u5f15\u64ce\u601d\u8003\u4e2d\u2026\\n$headText\"\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "            }\r\n        }\r\n\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "        panel.render(OverlayModel(\r\n", "ts": 1790302937.8826957}
+{"type": "output", "data": "            statusText = if (headText.isEmpty()) status else \"$status\\n$headText\",\r\n            pieces = currentPieces,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            arrowFrom = arrowFrom,\r\n            arrowTo = arrowTo,\r\n            flipped = currentOrientation == Orientation.FLIPPED,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            mySideIsRed = myRed,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            mature = suggestMature,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            paused = paused,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            strengthText = strengthButtonText(),\r\n            hashText = hashButtonText(),\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            manualMode = manualMode,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "            selectedCell = manualSelected,\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "        ))\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790302937.883198}
+{"type": "output", "data": "    private fun lineScoreText(line: AnalysisLine): String {\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "        val adv = line.scoreText()\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "        return if (line.redScoreCp >= 0) \"\u7ea2\u65b9\u4f18\u52bf $adv\" else \"\u7ea2\u65b9\u52a3\u52bf $adv\"\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "    }\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "    private fun ucciToCells(ucci: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "        if (ucci.length < 4) return Pair(0 to 0, 0 to 0)\r\n        val fx = ucci[0] - 'a'\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "        val fy = 9 - (ucci[1] - '0')\r\n", "ts": 1790302937.883698}
+{"type": "output", "data": "        val tx = ucci[2] - 'a'\r\n", "ts": 1790302937.883698}
+{"type": "end", "exit_code": 0, "ts": 1790302937.91693}

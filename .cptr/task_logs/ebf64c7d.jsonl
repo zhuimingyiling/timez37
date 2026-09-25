@@ -1,0 +1,77 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/YoloPostprocessor.kt' -Encoding UTF8\"", "pid": 15916, "ts": 1790300147.4246342}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790300148.174695}
+{"type": "output", "data": "\r\n", "ts": 1790300148.174695}
+{"type": "output", "data": "import kotlin.math.max\r\nimport kotlin.math.min\r\nimport kotlin.math.roundToInt\r\n\r\n", "ts": 1790300148.174695}
+{"type": "output", "data": "/**\r\n", "ts": 1790300148.174695}
+{"type": "output", "data": " * YOLOv5 \u8f93\u51fa\u540e\u5904\u7406\uff08\u7eaf JVM\uff0c\u4fbf\u4e8e\u5355\u6d4b\uff09\uff1a\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": " * \u89e3\u7801 [1,25200,20] \u5f20\u91cf -> \u7f6e\u4fe1\u5ea6\u8fc7\u6ee4 -> \u7c7b\u522b\u611f\u77e5 NMS -> \u6bd4\u4f8b/\u5c3a\u5bf8\u4e00\u81f4\u6027\u8fc7\u6ee4\u3002\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": " *\r\n * \u8fc7\u6ee4\u7b56\u7565\u4e0e VinXiangQi \u7684 GetBoardFromPrediction \u4e00\u81f4\u5e76\u52a0\u5f3a\uff1a\r\n * - \u68cb\u5b50\u6846\u5bbd\u9ad8\u6bd4\u987b\u5728 [aspectMin, aspectMax]\uff08\u68cb\u5b50\u8fd1\u4f3c\u5706\u5f62\uff0c\u6392\u9664\u628a\u5de5\u5177\u680f\u6309\u94ae/\u6a2a\u5e45\u8bef\u68c0\u5f53\u68cb\u5b50\uff09\uff1b\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": " * - \u76f8\u5bf9\"\u68cb\u5b50\u5bbd\u5ea6\u4e2d\u4f4d\u6570\"\u504f\u5dee\u8fc7\u5927\u7684\u6846\u5254\u9664\uff08\u6740\u6389\"\u8f6e\u5230\u7ea2\u65b9\"\u5706\u5f62\u6807\u8bb0\u7b49\u5c0f\u5f02\u7269\uff1b\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": " *   \u5bf9\u88ab\u8d70\u5b50\u6807\u8bb0\u73af\u906e\u6321\u7684\u771f\u68cb\u5b50\u7528\u5bbd\u677e\u9608\u503c\u907f\u514d\u8bef\u6740\uff09\u3002\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": " */\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "object YoloPostprocessor {\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "    const val MODEL_INPUT = 640\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "    const val ANCHORS = 25200\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "    const val DIMS = 20\r\n", "ts": 1790300148.1751966}
+{"type": "output", "data": "\r\n", "ts": 1790300148.1757097}
+{"type": "output", "data": "    /** letterbox \u53c2\u6570\uff1a\u5e27 -> 640 \u8f93\u5165\u7684\u7f29\u653e\u4e0e\u5c45\u4e2d\u7559\u767d */\r\n", "ts": 1790300148.1757097}
+{"type": "output", "data": "    data class Letterbox(val scale: Double, val padX: Double, val padY: Double) {\r\n", "ts": 1790300148.1757097}
+{"type": "output", "data": "        companion object {\r\n            fun forFrame(frameW: Int, frameH: Int): Letterbox {\r\n", "ts": 1790300148.1757097}
+{"type": "output", "data": "                val s = min(MODEL_INPUT.toDouble() / frameW, MODEL_INPUT.toDouble() / frameH)\r\n                val nw = (frameW * s).roundToInt()\r\n                val nh = (frameH * s).roundToInt()\r\n                return Letterbox(s, (MODEL_INPUT - nw) / 2.0, (MODEL_INPUT - nh) / 2.0)\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "            }\r\n        }\r\n    }\r\n\r\n    /**\r\n     * @param output \u89e3\u91ca\u5668\u539f\u59cb\u8f93\u51fa [1,25200,20]\uff08\u5df2\u4e58 sigmoid \u7684\u89e3\u7801\u503c\uff09\uff0c\u884c\u5e8f\u5373 anchor \u5e8f\r\n     * @param confThreshold \u68cb\u5b50/\u68cb\u76d8\u7edf\u4e00\u7f6e\u4fe1\u5ea6\u9608\u503c\uff08\u53c2\u8003\u5b9e\u73b0\u7528 0.7\uff0c\u53d6 0.6 \u517c\u987e\u53ec\u56de\uff09\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "     */\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "    fun decode(\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "        output: Array<FloatArray>,\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "        lb: Letterbox,\r\n", "ts": 1790300148.1763492}
+{"type": "output", "data": "        frameW: Int,\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "        frameH: Int,\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "        confThreshold: Double = 0.20,\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "        iouThreshold: Double = 0.45,\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "    ): List<YoloDetection> {\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "        data class Raw(val labelId: Int, val score: Double, val x1: Double, val y1: Double, val x2: Double, val y2: Double)\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "\r\n        val raws = ArrayList<Raw>(256)\r\n", "ts": 1790300148.1768594}
+{"type": "output", "data": "        for (i in 0 until ANCHORS) {\r\n", "ts": 1790300148.1773844}
+{"type": "output", "data": "            val row = output[i]\r\n", "ts": 1790300148.1778905}
+{"type": "output", "data": "            val obj = row[4].toDouble()\r\n            if (obj < confThreshold) continue\r\n            var bestCls = -1\r\n            var bestScore = 0.0\r\n            for (c in 0 until DIMS - 5) {\r\n                val s = obj * row[5 + c].toDouble()\r\n                if (s > bestScore) { bestScore = s; bestCls = c }\r\n            }\r\n            if (bestCls < 0 || bestScore < confThreshold) continue\r\n            val cx = row[0].toDouble()\r\n            val cy = row[1].toDouble()\r\n", "ts": 1790300148.1778905}
+{"type": "output", "data": "            val w = row[2].toDouble()\r\n            val h = row[3].toDouble()\r\n            raws.add(Raw(bestCls, bestScore, cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2))\r\n        }\r\n", "ts": 1790300148.1783915}
+{"type": "output", "data": "        if (raws.isEmpty()) return emptyList()\r\n", "ts": 1790300148.1783915}
+{"type": "output", "data": "\r\n        // \u7c7b\u522b\u611f\u77e5 NMS\r\n", "ts": 1790300148.1783915}
+{"type": "output", "data": "        raws.sortByDescending { it.score }\r\n        val keep = ArrayList<Raw>()", "ts": 1790300148.1783915}
+{"type": "output", "data": "\r\n        for (r in raws) {\r\n", "ts": 1790300148.1783915}
+{"type": "output", "data": "            var overlapped = false\r\n            for (k in keep) {\r\n                if (k.labelId != r.labelId) continue\r\n", "ts": 1790300148.1788955}
+{"type": "output", "data": "                if (iou(r.x1, r.y1, r.x2, r.y2, k.x1, k.y1, k.x2, k.y2) > iouThreshold) { overlapped = true; break }\r\n            }\r\n            if (!overlapped) keep.add(r)\r\n        }\r\n\r\n        // 640 \u8f93\u5165\u57df -> \u539f\u59cb\u5e27\u57df\r\n        fun toFrame(v: Double, pad: Double) = (v - pad) / lb.scale\r\n        val dets = ArrayList<YoloDetection>(keep.size)\r\n", "ts": 1790300148.1788955}
+{"type": "output", "data": "        for (r in keep) {\r\n            val x1 = toFrame(r.x1, lb.padX); val y1 = toFrame(r.y1, lb.padY)\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "            val x2 = toFrame(r.x2, lb.padX); val y2 = toFrame(r.y2, lb.padY)\r\n            dets.add(YoloDetection(r.labelId, r.score,\r\n                (x1 + x2) / 2, (y1 + y2) / 2, (x2 - x1), (y2 - y1)))\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "        }\r\n\r\n        // \u68cb\u5b50\u6bd4\u4f8b\u8fc7\u6ee4 + \u5c3a\u5bf8\u4e00\u81f4\u6027\u8fc7\u6ee4\uff08board \u6846\u4e0d\u53c2\u4e0e\uff09\r\n        val pieces = dets.filter { !it.isBoard && it.w > 0 && aspectOk(it) }\r\n        if (pieces.isEmpty()) return dets.filter { it.isBoard }\r\n        val medianW = median(pieces.map { it.w })\r\n        val medianH = median(pieces.map { it.h })\r\n        val out = ArrayList<YoloDetection>()\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "        for (d in dets) {\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "            when {\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "                d.isBoard -> out.add(d)\r\n", "ts": 1790300148.179502}
+{"type": "output", "data": "                aspectOk(d) && d.w >= medianW * 0.55 && d.w <= medianW * 1.6\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "                    && d.h >= medianH * 0.55 && d.h <= medianH * 1.6 -> out.add(d)\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "                // \u5c3a\u5bf8\u79bb\u7fa4\u7684\u4e22\u5f03\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "            }\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "        }\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "        return out\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "    }\r\n\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "    private fun aspectOk(d: YoloDetection): Boolean {\r\n", "ts": 1790300148.1800554}
+{"type": "output", "data": "        val ratio = d.w / d.h\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "        return ratio in 0.7..1.3\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "    }\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "\r\n    private fun iou(ax1: Double, ay1: Double, ax2: Double, ay2: Double,\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "                    bx1: Double, by1: Double, bx2: Double, by2: Double): Double {\r\n        val ix1 = max(ax1, bx1); val iy1 = max(ay1, by1)\r\n        val ix2 = min(ax2, bx2); val iy2 = min(ay2, by2)\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "        val iw = max(0.0, ix2 - ix1); val ih = max(0.0, iy2 - iy1)\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "        val inter = iw * ih\r\n", "ts": 1790300148.1805797}
+{"type": "output", "data": "        if (inter <= 0) return 0.0\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        val a = (ax2 - ax1) * (ay2 - ay1)\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        val b = (bx2 - bx1) * (by2 - by1)\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        return inter / (a + b - inter)\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "    }\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "    fun median(values: List<Double>): Double {\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        if (values.isEmpty()) return 0.0\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        val s = values.sorted()\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        val n = s.size\r\n", "ts": 1790300148.1810825}
+{"type": "output", "data": "        return if (n % 2 == 1) s[n / 2] else (s[n / 2 - 1] + s[n / 2]) / 2.0\r\n", "ts": 1790300148.1815834}
+{"type": "output", "data": "    }\r\n}\r\n", "ts": 1790300148.1815834}
+{"type": "end", "exit_code": 0, "ts": 1790300148.2115479}

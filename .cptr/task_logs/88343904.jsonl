@@ -1,0 +1,105 @@
+{"type": "start", "command": "powershell -Command \"Get-Content 'app/src/main/java/com/timez/chess/assist/RecognitionTypes.kt' -Encoding UTF8\"", "pid": 21108, "ts": 1790299890.2240314}
+{"type": "output", "data": "package com.timez.chess.assist\r\n", "ts": 1790299890.408263}
+{"type": "output", "data": "\r\nimport kotlin.math.abs\r\nimport com.timez.chess.gamelogic.Piece\r\n", "ts": 1790299890.408263}
+{"type": "output", "data": "\r\n", "ts": 1790299890.408263}
+{"type": "output", "data": "/**\r\n", "ts": 1790299890.408263}
+{"type": "output", "data": " * \u8bc6\u522b\u7ba1\u7ebf\u7684\u5171\u4eab\u7c7b\u578b\uff08\u7eaf JVM\uff0c\u65e0 Android \u4f9d\u8d56\uff09\uff1a\r\n", "ts": 1790299890.408263}
+{"type": "output", "data": " * \u5e27\u8f93\u5165\u3001\u671d\u5411\u3001\u5355\u5e27\u8bc6\u522b\u7ed3\u679c\u3001\u7a33\u5b9a\u5e27\u8ddf\u8e2a\u5668\u3002\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": " */\r\nclass Frame(val width: Int, val height: Int, val argb: IntArray) {\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "    init {\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "        require(argb.size == width * height) { \"frame pixel count mismatch\" }\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "}\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "enum class Orientation {\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "    /** \u7ea2\u65b9\u5728\u4e0b\uff08\u6807\u51c6\u671d\u5411\uff0c\u5c4f\u5e55\u4e0b\u65b9\u9635\u8425=\u7ea2\u65b9\uff09 */\r\n", "ts": 1790299890.4087665}
+{"type": "output", "data": "    STANDARD,\r\n    /** \u7ea2\u65b9\u5728\u4e0a\uff08\u6362\u8fb9/\u7ffb\u8f6c\u671d\u5411\uff0c\u5c4f\u5e55\u4e0b\u65b9\u9635\u8425=\u9ed1\u65b9\uff09 */\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "    FLIPPED;\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "}\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "/**\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": " * \u4e00\u5e27\u8bc6\u522b\u7ed3\u679c\u3002canonical \u4e3a\u9879\u76ee\u5185\u90e8\u7ea6\u5b9a\uff08\u7ea2\u6052\u5b9a\u5728 y=9\uff09\uff0corientation \u8868\u793a\u5c4f\u5e55\u671d\u5411\u3002\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": " */\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "class RecognitionResult(\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "    val canonical: Array<IntArray>,\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "    val screenRaw: Array<IntArray>,\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "    val orientation: Orientation,\r\n", "ts": 1790299890.409377}
+{"type": "output", "data": "    val issues: List<String>,\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "    val unknownCells: Int,\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "    val recognizedPieces: Int,\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "    val avgScore: Double,\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": ") {\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "    fun isValid(): Boolean = issues.isEmpty() && unknownCells == 0\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "}\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "/**\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": " * \u7a33\u5b9a\u5e27\u8ddf\u8e2a\u5668\uff1a\u8fde\u7eed confirmCount \u5e27\u51fa\u73b0\u540c\u4e00\u5c40\u9762\u624d\u786e\u8ba4\uff0c\u5e76\u63a8\u65ad\u8f6e\u6b21/\u68c0\u6d4b\u91cd\u5f00\u3002\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": " */\r\n", "ts": 1790299890.409877}
+{"type": "output", "data": "class BoardTracker(private val confirmCount: Int = 2) {\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "    enum class Event {\r\n        NEW_BOARD,\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "        SAME_BOARD,\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "        NEW_GAME,\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "        UNSTABLE,\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "    var confirmed: RecognitionResult? = null\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "        private set\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "    @Volatile var redGo = true\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "    @Volatile var unstableStreak = 0\r\n", "ts": 1790299890.410377}
+{"type": "output", "data": "        private set\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "    private var candidate: RecognitionResult? = null\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "    private var candidateHits = 0\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "    /** \u5f53\u524d\u5019\u9009\u5bf9\u5e94\u7684\u201c\u8d70\u5b50\u8d77\u70b9\u683c\u201d\uff08x, y\uff09\uff1b\u540c\u4e00\u6b65\u8d70\u5b50\u624d\u80fd\u8fde\u7eed\u7d2f\u8ba1 */\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "    private var candidateStartCell: Pair<Int, Int>? = null\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "    fun reset(redGoFirst: Boolean = true) {\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "        confirmed = null\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "        candidate = null\r\n", "ts": 1790299890.4110947}
+{"type": "output", "data": "        candidateHits = 0\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        candidateStartCell = null\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        unstableStreak = 0\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        redGo = redGoFirst\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "    fun restore(result: RecognitionResult, redGoSide: Boolean) {\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        confirmed = result\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        redGo = redGoSide\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        candidate = null\r\n", "ts": 1790299890.4116125}
+{"type": "output", "data": "        candidateHits = 0\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        candidateStartCell = null\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        unstableStreak = 0\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "    fun onFrame(res: RecognitionResult): Event {\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        val prev = confirmed\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        // \u4e0d\u5408\u6cd5\u5e27\r\n        if (!res.isValid()) {\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "            unstableStreak++\r\n            return Event.UNSTABLE\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "\r\n", "ts": 1790299890.4121196}
+{"type": "output", "data": "        // \u9996\u6b21\u786e\u8ba4\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "        if (prev == null) {\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "            if (candidate != null && AssistBoard.equal(res.canonical, candidate!!.canonical)) {\r\n                candidateHits++\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "            } else {\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "                candidate = res\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "                candidateHits = 1\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "            }\r\n            if (candidateHits >= confirmCount) {\r\n                confirmed = candidate!!\r\n", "ts": 1790299890.4127314}
+{"type": "output", "data": "                val first = candidate!!\r\n", "ts": 1790299890.4166431}
+{"type": "output", "data": "                candidate = null\r\n                candidateHits = 0\r\n                unstableStreak = 0\r\n                return if (AssistBoard.matchStartCount(first.canonical) >= 32)\r\n                    Event.NEW_GAME else Event.NEW_BOARD\r\n            }\r\n            unstableStreak++\r\n            return Event.UNSTABLE\r\n        }\r\n\r\n        // \u91cd\u5f00\u68c0\u6d4b\r\n        if (AssistBoard.matchStartCount(res.canonical) >= 32 &&\r\n            !AssistBoard.equal(res.canonical, prev.canonical)) {\r\n            confirmed = res\r\n            redGo = true\r\n            candidate = null\r\n            candidateHits = 0\r\n            candidateStartCell = null\r\n            unstableStreak = 0\r\n            return Event.NEW_GAME\r\n        }\r\n\r\n        // \u5b50\u6570\u8df3\u53d8\u95e8\u9650\r\n        val tol = maxOf(2, prev.recognizedPieces / 10)\r\n        if (abs(res.recognizedPieces - prev.recognizedPieces) > tol) {\r\n            candidate = null\r\n            candidateHits = 0\r\n            candidateStartCell = null\r\n            unstableStreak++\r\n            return Event.UNSTABLE\r\n        }\r\n\r\n        // \u4e0e\u5df2\u786e\u8ba4\u5c40\u9762\u5b8c\u5168\u76f8\u540c\r\n        if (AssistBoard.equal(res.canonical, prev.canonical)) {\r\n            candidate = null\r\n            candidateHits = 0\r\n            candidateStartCell = null\r\n            unstableStreak = 0\r\n            return Event.SAME_BOARD\r\n        }\r\n\r\n        // \u8d70\u5b50\u7279\u5f81\u6bd4\u5bf9\r\n        val diff = AssistBoard.moveDiff(res.canonical, prev.canonical)\r\n        val occToEmpty = diff[0]\r\n        val emptyToOcc = diff[1]\r\n        val typeChange = diff[2]\r\n\r\n        val isRealMove = (occToEmpty == 1) && (emptyToOcc + typeChange <= 2)\r\n\r\n        if (!isRealMove) {\r\n            // \u6296\u52a8\uff1a\u5c0f\u8303\u56f4\u9759\u9ed8\u5ffd\u7565\uff0c\u5927\u8303\u56f4\u62a5\u4e0d\u7a33\u5b9a\r\n            if (typeChange <= 4) {\r\n                candidate = null\r\n                candidateHits = 0\r\n                candidateStartCell = null\r\n                unstableStreak = 0\r\n                return Event.SAME_BOARD\r\n            }\r\n            candidate = null\r\n            candidateHits = 0\r\n            candidateStartCell = null\r\n            unstableStreak++\r\n            return Event.UNSTABLE\r\n        }\r\n\r\n        // \u627e\u51fa\u8d77\u70b9\u683c\uff08\u4ece\u6709\u5b50\u53d8\u7a7a\u7684\u552f\u4e00\u683c\u5b50\uff09\r\n        var startCell: Pair<Int, Int>? = null\r\n        for (y in 0 until AssistBoard.H) {\r\n            for (x in 0 until AssistBoard.W) {\r\n                val p0 = prev.canonical[y][x]\r\n                val p1 = res.canonical[y][x]\r\n                if (p0 != Piece.EMPTY && p1 == Piece.EMPTY) {\r\n                    startCell = x to y\r\n                    break\r\n                }\r\n            }\r\n            if (startCell != null) break\r\n        }\r\n        if (startCell == null) {\r\n            unstableStreak++\r\n            return Event.UNSTABLE\r\n        }\r\n\r\n        // \u5019\u9009\u786e\u8ba4\uff1a\u8981\u6c42\u8fde\u7eed confirmCount \u5e27\u90fd\u662f\u201c\u540c\u4e00\u6b65\u8d70\u5b50\u201d\uff08\u8d77\u70b9\u683c\u76f8\u540c\uff09\r\n        if (candidateStartCell == startCell && candidate != null) {\r\n            // \u68c0\u67e5\u8fd9\u6b21 res \u4e0e candidate \u662f\u5426\u4ecd\u662f\u540c\u4e00\u6b65\uff08\u8d77\u70b9\u76f8\u540c\u3001\u7ec8\u70b9\u4e00\u81f4\uff09\r\n            val stepDiff = AssistBoard.moveDiff(res.canonical, candidate!!.canonical)\r\n            val stillSameStep = stepDiff[0] == 0 && stepDiff[1] == 0 && stepDiff[2] <= 2\r\n            if (stillSameStep) {\r\n                candidateHits++\r\n            } else {\r\n                candidate = res\r\n                candidateHits = 1\r\n            }\r\n        } else {\r\n            candidate = res\r\n            candidateStartCell = startCell\r\n            candidateHits = 1\r\n        }\r\n\r\n        if (candidateHits >= confirmCount) {\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            val newBoard = candidate!!\r\n            val moved = AssistBoard.movedSide(prev.canonical, newBoard.canonical)\r\n            if (moved != null) {\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "                redGo = moved != 1\r\n            }\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            confirmed = newBoard\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            candidate = null\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            candidateHits = 0\r\n            candidateStartCell = null\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            unstableStreak = 0\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "            return Event.NEW_BOARD\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "        }\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "        unstableStreak++\r\n", "ts": 1790299890.417174}
+{"type": "output", "data": "        return Event.UNSTABLE\r\n", "ts": 1790299890.417676}
+{"type": "output", "data": "    }\r\n", "ts": 1790299890.417676}
+{"type": "output", "data": "}\r\n", "ts": 1790299890.417676}
+{"type": "end", "exit_code": 0, "ts": 1790299890.4347491}
